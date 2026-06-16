@@ -1073,7 +1073,7 @@ let recognition=null,recogActive=false;
 let activeCanvas=null,wvRAF=null;
 let phaseTimer=null,drillIv=null;
 const micGranted={val:false};
-let lastTranscript='',lastQuestion='',lastQType='',improvedText='';
+let lastTranscript='',lastQuestion='',lastQType='',lastHint='',improvedText='';
 
 function getAC(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
 
@@ -1418,7 +1418,7 @@ function finishEarly(mod){
     setBar('ph-bar',0,1,'');setTB(null,'');
     addXP(10);
     const txt=document.getElementById('ph-transcript').textContent;
-    lastTranscript=txt;lastQuestion=document.getElementById('ph-title').textContent;lastQType='Speak About the Photo';
+    lastTranscript=txt;lastQuestion=document.getElementById('ph-title').textContent;lastQType='Speak About the Photo';lastHint=document.getElementById('ph-hint-text').textContent;
     setTimeout(()=>showScore(analyzeTranscript(txt,90)),500);
   } else if(mod==='read'){
     if(rdPhase!=='speaking')return;
@@ -1430,7 +1430,7 @@ function finishEarly(mod){
     setBar('rd-bar',0,1,'');setTB(null,'');
     addXP(10);
     const txt=document.getElementById('rd-transcript').textContent;
-    lastTranscript=txt;lastQuestion=document.getElementById('rd-q').textContent;lastQType='Read Then Speak';
+    lastTranscript=txt;lastQuestion=document.getElementById('rd-q').textContent;lastQType='Read Then Speak';lastHint='';
     setTimeout(()=>showScore(analyzeTranscript(txt,90)),500);
   } else if(mod==='sample'){
     if(spPhase!=='speaking')return;
@@ -1441,7 +1441,7 @@ function finishEarly(mod){
     setBar('sp-bar',0,1,'');setTB(null,'');
     addXP(15);
     const txt=document.getElementById('sp-transcript').textContent;
-    lastTranscript=txt;lastQuestion=document.getElementById('sp-q').textContent;lastQType='Speaking Sample';
+    lastTranscript=txt;lastQuestion=document.getElementById('sp-q').textContent;lastQType='Speaking Sample';lastHint='';
     setTimeout(()=>showScore(analyzeTranscript(txt,180)),500);
   } else if(mod==='interactive'){
     if(isPhase!=='speaking')return;
@@ -1454,7 +1454,7 @@ function finishEarly(mod){
     }
     showDoneBtn('interactive',false);
     const isLast=curQ>=curSet.qs.length-1;
-    lastTranscript=_isTxt;lastQuestion=curSet.qs[curQ].q;lastQType='Interactive Speaking';
+    lastTranscript=_isTxt;lastQuestion=curSet.qs[curQ].q;lastQType='Interactive Speaking';lastHint='';
     addXP(5);hidePrepOverlay();
     if(isLast){
       setBanner('is-banner','idle','🏁','Set complete!','—');
@@ -1495,7 +1495,7 @@ function startPhotoTimer(){
       setBar('ph-bar',0,1,'');setTB(null,'');
       addXP(10);
       const _phTxt=document.getElementById('ph-transcript').textContent;
-      lastTranscript=_phTxt;lastQuestion=document.getElementById('ph-title').textContent;lastQType='Speak About the Photo';
+      lastTranscript=_phTxt;lastQuestion=document.getElementById('ph-title').textContent;lastQType='Speak About the Photo';lastHint=document.getElementById('ph-hint-text').textContent;
       setTimeout(()=>showScore(analyzeTranscript(_phTxt,90)),700);
       return;
     }
@@ -1950,7 +1950,7 @@ function startISTimer(){
         document.getElementById('is-playback').classList.add('show');
       }
       const isLast=curQ>=curSet.qs.length-1;
-      lastTranscript=_isTxt;lastQuestion=curSet.qs[curQ].q;lastQType='Interactive Speaking';
+      lastTranscript=_isTxt;lastQuestion=curSet.qs[curQ].q;lastQType='Interactive Speaking';lastHint='';
       addXP(5);hidePrepOverlay();
       if(isLast){
         setBanner('is-banner','idle','🏁','Set complete! ¡Excelente!','—');
@@ -2249,24 +2249,28 @@ async function requestImprovement(){
 
   const cleanTxt=lastTranscript.replace(/<[^>]+>/g,'').trim();
 
-  const sysPrompt=`You are a DET (Duolingo English Test) speaking coach for a Spanish-speaking student. Your job is to rewrite their spoken response with better English while keeping their exact ideas.
+  const contextLine=lastHint?`Photo context: ${lastHint}`:`Topic: ${lastQuestion}`;
+
+  const sysPrompt=`You are a DET (Duolingo English Test) speaking coach for a Spanish-speaking student. Your job is to rewrite their spoken response with better English while keeping their exact ideas — and naturally weave in 2–3 relevant vocabulary words or expressions that fit the topic/photo context.
 
 Rules you MUST follow:
-- Keep ALL their original ideas and personal examples unchanged
+- Keep ALL their original ideas and personal examples — do not invent new ones
 - Fix grammar: verb tenses, missing articles (a/an/the), wrong prepositions
 - Add natural DET connectors: "In my opinion", "First of all", "For example", "However", "In conclusion"
 - Replace repetitive or basic words with better vocabulary
+- Naturally incorporate 2–3 relevant words/expressions from the topic context (e.g. for a beach cleanup photo: "debris", "environmental awareness", "community effort") so the response feels richer and more on-topic
 - Sound like natural SPOKEN English, not written essays
-- Wrap EVERY phrase or word you changed in **double asterisks**
+- Wrap EVERY new or changed phrase/word in **double asterisks** — including the new vocabulary additions
 - Return ONLY the improved response text — no labels, no explanations, no intro`;
 
   const userPrompt=`Question: "${lastQuestion}"
 Task: ${lastQType}
+${contextLine}
 
 Student's response:
 "${cleanTxt}"
 
-Rewrite it improved for DET.`;
+Rewrite it improved for DET, naturally adding 2–3 relevant vocabulary words from the context.`;
 
   const messages=[{role:'system',content:sysPrompt},{role:'user',content:userPrompt}];
   try{
