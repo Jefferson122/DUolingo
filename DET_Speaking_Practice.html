@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DET Practice — Duolingo English Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#58CC02;--gd:#46A302;--b:#1CB0F6;--bd:#0092D1;--bl:#DDF4FF;
+  --r:#FF4B4B;--rl:#FFE8E8;--y:#FFC800;--yd:#C89800;--yl:#FFF9DC;
+  --bg:#F7F7F7;--w:#FFF;--t:#3C3C3C;--tm:#AFAFAF;--tl:#777;
+  --br:#E5E5E5;--brs:#C5C5C5;
+  --sh0:0 2px 8px rgba(0,0,0,.07);--sh:0 4px 20px rgba(0,0,0,.10);--shl:0 8px 36px rgba(0,0,0,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
+
+/* ─── TOP BAR ─── */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;background:var(--w);
+  border-bottom:2px solid var(--br);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:var(--sh0)}
+#tb-left{display:flex;align-items:center;gap:10px}
+#tb-logo{font-size:1.9rem;line-height:1}
+#tb-titles{line-height:1.2}
+#tb-titles b{font-size:.98rem;font-weight:900;color:var(--t);display:block}
+#tb-titles small{font-size:.68rem;font-weight:700;color:var(--tm);letter-spacing:.5px}
+#tb-right{display:flex;align-items:center;gap:10px}
+#tb-phase{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:20px;background:var(--bl);color:var(--bd);display:none}
+#tb-phase.prep{background:var(--yl);color:var(--yd)}
+#tb-phase.rec{background:#E8F8E0;color:var(--gd)}
+#tb-phase.warn{background:var(--rl);color:var(--r);animation:blink .5s infinite alternate}
+@keyframes blink{to{opacity:.5}}
+#tb-timer{font-size:1rem;font-weight:900;color:var(--t);min-width:48px;text-align:right;display:none}
+#tb-exit{background:none;border:2px solid var(--br);color:var(--tm);padding:6px 14px;border-radius:20px;font:.8rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;transition:.2s}
+#tb-exit:hover{border-color:var(--r);color:var(--r)}
+
+/* ─── MAIN ─── */
+main{margin-top:60px}
+.screen{display:none;max-width:780px;margin:0 auto;padding:28px 20px 70px}
+.screen.active{display:block}
+#screen-home{display:block;max-width:960px;margin:0 auto;padding:36px 20px 60px}
+
+/* ─── HOME ─── */
+.home-hero{text-align:center;margin-bottom:44px}
+.home-hero h1{font-size:2rem;font-weight:900;margin-bottom:6px}
+.home-hero p{color:var(--tl);font-weight:600;font-size:.95rem}
+.pill-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.pill{font-size:.72rem;font-weight:800;padding:5px 13px;border-radius:20px;background:var(--bl);color:var(--bd)}
+.pill.g{background:#E8F8E0;color:var(--gd)}.pill.y{background:var(--yl);color:var(--yd)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.card{background:var(--w);border:2px solid var(--br);border-radius:22px;padding:28px 22px;cursor:pointer;
+  transition:.22s;text-align:center;box-shadow:var(--sh0);position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--g);
+  border-radius:0 0 22px 22px;transform:scaleX(0);transition:.22s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shl);border-color:var(--g)}
+.card:hover::after{transform:scaleX(1)}
+.card-ico{font-size:2.8rem;margin-bottom:12px}
+.card-title{font-size:.98rem;font-weight:900;margin-bottom:7px}
+.card-desc{font-size:.8rem;color:var(--tl);line-height:1.5;font-weight:600;margin-bottom:10px}
+.card-tag{display:inline-block;font-size:.7rem;font-weight:800;padding:4px 11px;border-radius:20px;
+  background:var(--bg);border:1.5px solid var(--br);color:var(--tm)}
+.card-tag.new{background:#E8F8E0;border-color:var(--g);color:var(--gd)}
+.card-stat{margin-top:10px;font-size:.72rem;font-weight:700;color:var(--tm)}
+.card-stat span{color:var(--g);font-weight:900}
+
+/* ─── MIC PERMISSION BANNER ─── */
+#mic-banner{background:#FFF9DC;border:2px solid var(--y);border-radius:14px;padding:14px 18px;
+  margin-bottom:20px;display:flex;align-items:center;gap:12px;display:none}
+#mic-banner p{font-size:.82rem;font-weight:700;color:#7A5F00;flex:1}
+#mic-banner button{background:var(--y);border:none;border-radius:10px;padding:8px 16px;
+  font:.82rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;color:#5C3D00}
+
+/* ─── SECTION HEADER ─── */
+.sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.sec-ico{font-size:2rem}.sec-info h2{font-size:1.3rem;font-weight:900}
+.sec-info p{font-size:.78rem;color:var(--tm);font-weight:600;margin-top:2px}
+
+/* ─── PHASE BANNER ─── */
+.phase-banner{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 18px;border-radius:12px;margin-bottom:14px;font-weight:800;font-size:.82rem;
+  transition:.3s;background:var(--yl);color:var(--yd)}
+.phase-banner.rec{background:#E8F8E0;color:var(--gd)}
+.phase-banner.warn{background:var(--rl);color:var(--r)}
+.phase-banner.idle{background:var(--bg);color:var(--tm)}
+.phase-banner .ph-left{display:flex;align-items:center;gap:8px}
+.phase-banner .ph-num{font-size:1.2rem;font-weight:900}
+
+/* ─── LINEAR TIMER BAR ─── */
+.bar-wrap{height:10px;background:var(--br);border-radius:5px;overflow:hidden;margin-bottom:20px}
+.bar-fill{height:100%;background:var(--g);border-radius:5px;width:100%;transition:width .95s linear,background .3s}
+.bar-fill.prep{background:var(--y)}
+.bar-fill.warn{background:var(--r)}
+
+/* ─── PHOTO BOX ─── */
+.photo-card{background:var(--w);border:2px solid var(--br);border-radius:20px;overflow:hidden;box-shadow:var(--sh);margin-bottom:18px}
+.photo-instr{background:var(--bl);padding:12px 20px;font-size:.82rem;font-weight:700;color:var(--bd);
+  display:flex;align-items:center;gap:8px;border-bottom:1.5px solid #BEE3F8}
+.photo-img-wrap{position:relative;width:100%;height:380px;background:#1a1a2e;overflow:hidden}
+.photo-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .4s}
+.photo-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#888}
+.photo-ph .ico{font-size:3rem}.photo-ph p{font-size:.88rem;font-weight:700}
+.photo-footer{padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-top:1.5px solid var(--br)}
+.photo-footer-main{flex:1}
+.photo-title{font-size:.92rem;font-weight:900;color:var(--t);margin-bottom:3px}
+.photo-sub{font-size:.76rem;color:var(--tl);font-weight:600;line-height:1.4}
+.hint-toggle{background:none;border:1.5px solid var(--br);color:var(--tm);padding:5px 12px;
+  border-radius:20px;font:.74rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;flex-shrink:0}
+.hint-toggle:hover{border-color:var(--b);color:var(--b)}
+.hint-box{background:var(--yl);border-top:1.5px solid #FFE082;padding:12px 20px;display:none}
+.hint-box.open{display:block}
+.hint-box p{font-size:.8rem;color:#6B4F00;font-weight:600;line-height:1.6}
+
+/* ─── QUESTION CARD ─── */
+.q-card{background:var(--w);border:2px solid var(--br);border-radius:18px;padding:24px;
+  box-shadow:var(--sh0);margin-bottom:18px;position:relative}
+.q-label{font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--tm);margin-bottom:8px}
+.q-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:900;margin-bottom:10px}
+.q-badge.describe{background:var(--bl);color:var(--bd)}
+.q-badge.compare{background:#E8F8E0;color:var(--gd)}
+.q-badge.opinion{background:var(--yl);color:var(--yd)}
+.q-badge.experience{background:#F3E8FF;color:#7B2FBE}
+.q-badge.t1{background:var(--bl);color:var(--bd)}
+.q-badge.t2{background:var(--yl);color:var(--yd)}
+.q-topic{font-size:.8rem;font-weight:800;color:var(--b);margin-bottom:5px}
+.q-text{font-size:1.1rem;font-weight:700;line-height:1.65;color:var(--t);padding-right:55px}
+.copy-btn{position:absolute;top:14px;right:14px;background:none;border:1.5px solid var(--br);
+  color:var(--tm);padding:5px 11px;border-radius:20px;cursor:pointer;font:.72rem/1 'Nunito',sans-serif;
+  font-weight:800;transition:.2s;white-space:nowrap}
+.copy-btn:hover{border-color:var(--b);color:var(--b)}
+.copy-btn.ok{border-color:var(--g)!important;color:var(--g)!important}
+
+/* ─── RECORDING AREA ─── */
+.rec-area{background:var(--w);border:2px solid var(--br);border-radius:18px;padding:22px;
+  box-shadow:var(--sh0);margin-bottom:16px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.mic-ring{position:relative;display:flex;align-items:center;justify-content:center}
+.mic-pulse{position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(88,204,2,.15);
+  animation:none;pointer-events:none}
+.mic-pulse.active{animation:pulse 1.2s infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.mic-btn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;font-size:1.8rem;
+  background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 5px 0 var(--gd),var(--sh);transition:.18s;position:relative;z-index:1}
+.mic-btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--gd),var(--shl)}
+.mic-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--gd)}
+.mic-btn.prep{background:var(--y);box-shadow:0 5px 0 var(--yd)}
+.mic-btn.rec{background:var(--r);box-shadow:0 5px 0 #B83030}
+.mic-btn.disabled{background:var(--tm);box-shadow:0 5px 0 #888;cursor:not-allowed;opacity:.6}
+
+/* ─── WAVEFORM CANVAS ─── */
+.waveform-wrap{width:100%;max-width:500px;height:60px;position:relative}
+#wv-photo,#wv-read,#wv-sample,#wv-is{width:100%;height:60px;display:block;border-radius:8px}
+.waveform-idle{display:flex;align-items:center;justify-content:center;gap:4px;height:60px}
+.wvb{width:4px;border-radius:2px;background:var(--br);height:10px}
+
+/* ─── LIVE TRANSCRIPT ─── */
+.transcript-box{width:100%;max-width:500px;min-height:48px;background:var(--bg);border:1.5px solid var(--br);
+  border-radius:10px;padding:10px 14px;font-size:.82rem;font-weight:600;color:var(--tl);
+  line-height:1.5;text-align:left;display:none}
+.transcript-box.active{display:block}
+.transcript-box .interim{color:var(--tm)}
+
+/* ─── PLAYBACK ─── */
+.playback-row{display:flex;align-items:center;gap:10px;display:none}
+.playback-row.show{display:flex}
+#playback-audio{display:none}
+.play-back-btn{background:var(--bl);border:none;border-radius:20px;padding:8px 18px;
+  font:.8rem/1 'Nunito',sans-serif;font-weight:800;color:var(--bd);cursor:pointer;transition:.2s}
+.play-back-btn:hover{background:var(--b);color:#fff}
+.rec-size{font-size:.72rem;font-weight:700;color:var(--tm)}
+
+/* ─── BUTTONS ─── */
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;align-items:center}
+.btn{padding:11px 22px;border-radius:12px;border:none;cursor:pointer;font:.88rem/1 'Nunito',sans-serif;
+  font-weight:800;display:inline-flex;align-items:center;gap:7px;transition:.18s}
+.btn:active{transform:translateY(2px)}
+.btn-g{background:var(--g);color:#fff;box-shadow:0 4px 0 var(--gd)}.btn-g:hover{background:var(--gd)}
+.btn-b{background:var(--b);color:#fff;box-shadow:0 4px 0 var(--bd)}.btn-b:hover{background:var(--bd)}
+.btn-ghost{background:var(--w);color:var(--tl);border:2px solid var(--br);box-shadow:0 3px 0 var(--brs)}.btn-ghost:hover{border-color:var(--tl);color:var(--t)}
+.btn-sm{padding:8px 16px;font-size:.8rem}
+.kbd-hint{text-align:center;color:var(--tm);font-size:.72rem;font-weight:600;margin-top:6px}
+kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding:1px 7px;font-family:monospace;font-size:.7rem;color:var(--tl)}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.tab{background:var(--w);border:2px solid var(--br);color:var(--tm);padding:7px 16px;
+  border-radius:20px;cursor:pointer;font:.8rem/1 'Nunito',sans-serif;font-weight:800;transition:.18s}
+.tab.active{background:var(--g);border-color:var(--g);color:#fff}
+
+/* ─── IS PROGRESS ─── */
+.is-prog{display:flex;align-items:center;gap:7px;justify-content:center;margin-bottom:20px}
+.is-dot{width:34px;height:9px;border-radius:5px;background:var(--br);transition:.3s}
+.is-dot.done{background:var(--g)}.is-dot.cur{background:var(--b)}
+.is-dot.t2{border-top:2px solid var(--y)}.is-dot.t2.done{background:var(--y)}.is-dot.t2.cur{background:var(--y)}
+.is-div{font-size:.68rem;font-weight:800;color:var(--tm)}
+
+/* ─── AI AVATAR ─── */
+.avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:6px}
+.avatar-circle{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--b),#6F42FF);
+  display:flex;align-items:center;justify-content:center;font-size:2.5rem;
+  box-shadow:0 4px 20px rgba(28,176,246,.35);transition:.3s;position:relative}
+.avatar-circle.talking{animation:avatar-talk .6s infinite alternate}
+@keyframes avatar-talk{from{transform:scale(1)}to{transform:scale(1.06)}}
+.avatar-circle .talk-ring{position:absolute;inset:-6px;border-radius:50%;border:3px solid var(--b);
+  opacity:0;animation:none}
+.avatar-circle.talking .talk-ring{opacity:1;animation:ring-expand .8s infinite}
+@keyframes ring-expand{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.3);opacity:0}}
+.avatar-label{font-size:.74rem;font-weight:800;color:var(--tm);letter-spacing:.5px}
+
+/* ─── TTS INDICATOR ─── */
+.tts-bar{display:flex;align-items:center;gap:6px;justify-content:center;min-height:28px}
+.tts-bar span{font-size:.76rem;font-weight:700;color:var(--b);display:none}
+.tts-bar span.show{display:block}
+.tts-dots{display:flex;gap:4px;align-items:center;display:none}
+.tts-dots.show{display:flex}
+.tts-dot{width:7px;height:7px;border-radius:50%;background:var(--b);animation:tts-bounce .8s infinite alternate}
+.tts-dot:nth-child(2){animation-delay:.2s}.tts-dot:nth-child(3){animation-delay:.4s}
+@keyframes tts-bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+
+/* ─── SCORE MODAL ─── */
+#score-modal{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+#score-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)}
+#score-card{position:relative;z-index:1;background:var(--w);border-radius:24px;padding:26px 26px 20px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:sc-pop .35s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto}
+@keyframes sc-pop{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+.sc-header{display:flex;align-items:center;gap:18px;margin-bottom:20px}
+.sc-circle{width:90px;height:90px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;transition:.5s}
+.sc-circle-inner{position:absolute;inset:9px;border-radius:50%;background:var(--w);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.sc-num{font-size:1.5rem;font-weight:900;line-height:1;color:var(--t)}
+.sc-det{font-size:.58rem;font-weight:800;color:var(--tm);letter-spacing:.5px}
+.sc-right{flex:1}
+.sc-grade-row{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+.sc-grade{font-size:2.1rem;font-weight:900;line-height:1}
+.sc-level{font-size:.8rem;font-weight:800;color:var(--tm)}
+.sc-words{font-size:.78rem;font-weight:700;color:var(--tl)}
+.sc-section-lbl{font-size:.66rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--tm);margin:14px 0 8px}
+.sc-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:2px}
+.sc-bar-row{display:flex;align-items:center;gap:9px}
+.sc-bar-label{font-size:.74rem;font-weight:800;color:var(--t);width:90px;flex-shrink:0}
+.sc-bar-track{flex:1;height:11px;background:var(--br);border-radius:6px;overflow:hidden}
+.sc-bar-fill{height:100%;border-radius:6px;width:0%;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.sc-bar-val{font-size:.72rem;font-weight:900;width:26px;text-align:right;color:var(--t)}
+.sc-tips{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+.sc-tip{font-size:.78rem;font-weight:700;padding:8px 12px;border-radius:10px;line-height:1.45;display:flex;gap:7px;align-items:flex-start}
+.sc-tip>div{flex:1}
+.sc-tip.ok{background:#E8F8E0;color:var(--gd)}.sc-tip.bad{background:var(--rl);color:var(--r)}.sc-tip.mid{background:var(--yl);color:var(--yd)}
+.sc-tip-icon{flex-shrink:0;font-weight:900}
+.sc-btns{display:flex;gap:8px;justify-content:center;margin-top:4px}
+
+/* ─── TEMPLATES (always visible) ─── */
+.tpl-card{background:var(--w);border:2px solid var(--br);border-radius:16px;overflow:hidden;margin-top:14px;box-shadow:var(--sh0)}
+.tpl-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:linear-gradient(135deg,#F0FFF4,#EBF8FF);border-bottom:1.5px solid var(--br)}
+.tpl-hdr h4{font-size:.88rem;font-weight:900;color:var(--t)}
+.tpl-test-btn{background:var(--w);border:2px solid var(--br);color:var(--tm);padding:5px 12px;border-radius:20px;font:.72rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;transition:.2s;white-space:nowrap}
+.tpl-test-btn:hover,.tpl-test-btn.active{background:var(--y);border-color:var(--y);color:#5C3D00}
+.tpl-body{display:block;padding:6px 14px 16px}
+.tpl-step{display:flex;gap:10px;margin-top:10px;align-items:flex-start}
+.tpl-n{background:var(--g);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;flex-shrink:0;margin-top:9px}
+.tpl-n.b{background:var(--b)}
+.tpl-phrase-card{flex:1;background:var(--bg);border:1.5px solid var(--br);border-radius:12px;padding:9px 13px}
+.tpl-step-title{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.tpl-step-name{font-size:.83rem;font-weight:900;color:var(--t)}
+.tpl-time{font-size:.62rem;font-weight:900;background:var(--bl);color:var(--bd);padding:2px 8px;border-radius:10px;white-space:nowrap}
+.tpl-hear{background:none;border:1.5px solid var(--br);border-radius:20px;padding:2px 9px;font-size:.68rem;cursor:pointer;color:var(--tm);transition:.2s;font-family:'Nunito',sans-serif;font-weight:800;margin-left:auto;white-space:nowrap}
+.tpl-hear:hover{background:var(--bl);border-color:var(--b);color:var(--bd)}
+.tpl-phrase{font-size:.78rem;font-weight:600;color:var(--tl);font-style:italic;line-height:1.55;transition:.3s}
+.tpl-phrase.memorize-hidden{background:var(--br);color:transparent;border-radius:6px;cursor:pointer;user-select:none;padding:1px 4px}
+.tpl-phrase.memorize-hidden:hover{background:var(--brs)}
+.tips-bx{background:var(--bl);border-radius:10px;padding:11px 15px;margin-top:12px}
+.tips-bx h5{font-size:.7rem;font-weight:900;color:var(--bd);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.tips-bx li{font-size:.77rem;font-weight:600;color:var(--t);padding:2px 0 2px 16px;position:relative;list-style:none;line-height:1.4}
+.tips-bx li::before{content:"✓";position:absolute;left:0;color:var(--g);font-weight:900}
+
+/* ─── COMPLETE CARD ─── */
+.done-card{background:var(--w);border:2px solid var(--g);border-radius:18px;padding:28px;text-align:center;margin-top:16px;display:none;box-shadow:var(--sh)}
+.done-card.show{display:block}
+.done-card h3{font-size:1.4rem;font-weight:900;color:var(--gd);margin-bottom:6px}
+.done-card p{color:var(--tl);font-size:.88rem;font-weight:600}
+
+/* ─── STAT PILLS ─── */
+.stat-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.stat-p{background:var(--w);border:1.5px solid var(--br);border-radius:20px;padding:6px 14px;
+  font-size:.78rem;font-weight:800;color:var(--tm);display:flex;align-items:center;gap:5px;box-shadow:var(--sh0)}
+.stat-p .v{color:var(--g);font-weight:900;font-size:.92rem}
+
+@media(max-width:600px){
+  #topbar{padding:0 12px}.screen{padding:16px 12px 50px}
+  .photo-img-wrap{height:240px}.q-text{font-size:1rem;padding-right:0}
+  .cards{grid-template-columns:1fr 1fr}
+}
+/* ─── GUÍAS DE PRONUNCIACIÓN ─── */
+.tpl-pron{font-size:.71rem;font-weight:800;color:var(--bd);background:var(--bl);border-radius:6px;padding:3px 9px;display:inline-block;margin-top:4px;letter-spacing:.2px}
+.tpl-es{font-size:.74rem;font-weight:600;color:#7A5F00;background:var(--yl);border-radius:6px;padding:4px 10px;margin-top:3px;display:block;line-height:1.5}
+.tpl-es b{font-weight:900}
+.tpl-phrase{margin-bottom:3px}
+/* ─── SCORE BILINGÜE ─── */
+.sc-bilin{font-size:.71rem;font-weight:600;opacity:.85;margin-top:3px;display:block;color:inherit}
+
+/* ─── XP BADGE ─── */
+#xp-badge{font-size:.76rem;font-weight:900;background:#E8F8E0;color:var(--gd);padding:5px 13px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+
+/* ─── DAILY GOAL ─── */
+.daily-goal{background:var(--w);border:2px solid var(--br);border-radius:16px;padding:14px 20px;margin-bottom:26px;display:flex;align-items:center;gap:16px;box-shadow:var(--sh0)}
+.dg-icon{font-size:2rem;flex-shrink:0}
+.dg-info{flex:1}
+.dg-title{font-size:.82rem;font-weight:900;color:var(--t);margin-bottom:6px}
+.dg-bar-wrap{height:10px;background:var(--br);border-radius:5px;overflow:hidden;margin-bottom:4px}
+.dg-bar-fill{height:100%;background:linear-gradient(90deg,var(--g),#78E100);border-radius:5px;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%}
+.dg-sub{font-size:.7rem;font-weight:700;color:var(--tm)}
+.dg-streak{text-align:center;flex-shrink:0;min-width:48px}
+.dg-streak-num{font-size:1.6rem;font-weight:900;color:var(--y);display:block;line-height:1}
+.dg-streak-lbl{font-size:.6rem;font-weight:800;color:var(--tm);text-transform:uppercase;letter-spacing:.5px}
+
+/* ─── PREP OVERLAY ─── */
+#prep-overlay{position:fixed;bottom:80px;right:16px;z-index:150;width:264px;background:var(--w);border:2px solid var(--y);border-radius:16px;padding:13px 15px;box-shadow:var(--shl);display:none;pointer-events:none}
+#prep-overlay.show{display:block;animation:po-in .28s ease}
+@keyframes po-in{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+#prep-overlay h5{font-size:.67rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--yd);margin-bottom:8px}
+.po-step{display:flex;gap:7px;margin-bottom:6px;align-items:flex-start}
+.po-n{background:var(--y);color:#5C3D00;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:900;flex-shrink:0;margin-top:2px}
+.po-content{flex:1}
+.po-name{font-size:.69rem;font-weight:900;color:var(--t)}
+.po-phrase{font-size:.63rem;font-weight:600;color:var(--tl);font-style:italic;line-height:1.3;margin-top:1px}
+
+/* ─── DRILL SCREEN ─── */
+#screen-drill{display:none;max-width:680px;margin:0 auto;padding:28px 20px 70px}
+#screen-drill.active{display:block}
+#drill-type-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.drill-progress-wrap{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.drill-dots{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.drill-dot{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--br);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:900;background:var(--bg);color:var(--tm);transition:.25s}
+.drill-dot.done{background:var(--g);border-color:var(--gd);color:#fff}
+.drill-dot.fail{background:var(--r);border-color:#B83030;color:#fff}
+.drill-dot.cur{background:var(--y);border-color:var(--yd);color:#5C3D00;transform:scale(1.15)}
+#drill-xp{font-size:.76rem;font-weight:900;color:var(--g);white-space:nowrap}
+.phrase-big-card{background:var(--w);border:2px solid var(--br);border-radius:20px;padding:26px;box-shadow:var(--sh);margin-bottom:18px}
+.phrase-big-card .step-meta{font-size:.67rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--tm);margin-bottom:3px}
+.phrase-big-card .step-name{font-size:1.05rem;font-weight:900;color:var(--t);margin-bottom:10px}
+.phrase-big-card .phrase-block{background:var(--bg);border:1.5px solid var(--br);border-radius:12px;padding:14px 16px;font-size:.95rem;font-weight:700;color:var(--t);line-height:1.65;margin-bottom:12px;white-space:pre-line}
+.phrase-big-card .phrase-es-box{font-size:.79rem;font-weight:600;color:#7A5F00;background:var(--yl);border-radius:10px;padding:9px 13px;line-height:1.55;margin-bottom:16px;white-space:pre-line}
+.drill-countdown{font-size:2.6rem;font-weight:900;color:var(--g);text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center;transition:.2s;margin:8px 0}
+.drill-countdown.warn{color:var(--r)}
+.self-eval{display:none;gap:10px;justify-content:center;margin-top:8px}
+.self-eval.show{display:flex}
+.se-btn{padding:11px 22px;border-radius:12px;border:none;cursor:pointer;font:.88rem/1 'Nunito',sans-serif;font-weight:800;transition:.18s}
+.se-ok{background:var(--g);color:#fff;box-shadow:0 4px 0 var(--gd)}.se-ok:hover{background:var(--gd)}
+.se-fail{background:var(--r);color:#fff;box-shadow:0 4px 0 #B83030}.se-fail:hover{background:#B83030}
+.drill-complete-wrap{text-align:center;padding:30px 20px;display:none}
+.drill-complete-wrap .trophy{font-size:3.5rem;margin-bottom:12px}
+.drill-complete-wrap h3{font-size:1.25rem;font-weight:900;color:var(--gd);margin-bottom:6px}
+.drill-complete-wrap p{font-size:.85rem;font-weight:600;color:var(--tl);margin-bottom:22px}
+
+/* ─── XP POP ─── */
+.xp-pop{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:8px 22px;border-radius:20px;font:.88rem/1 'Nunito',sans-serif;font-weight:900;z-index:600;animation:xp-float 1.5s forwards;pointer-events:none;white-space:nowrap}
+@keyframes xp-float{0%{opacity:1;transform:translateX(-50%) translateY(0)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-60px)}}
+
+/* ─── DRILL HOME CARD ─── */
+.card.drill-card::after{background:var(--y)}
+.card.drill-card:hover{border-color:var(--y)}
+
+/* ─── AI IMPROVE SECTION (in score modal) ─── */
+.sc-ai-btn-wrap{margin:12px 0 4px;display:flex;justify-content:center}
+.btn-ai{background:linear-gradient(135deg,#6F42FF,var(--b));color:#fff;box-shadow:0 4px 0 #4B22CC;border:none;padding:11px 22px;border-radius:12px;cursor:pointer;font:.88rem/1 'Nunito',sans-serif;font-weight:800;display:inline-flex;align-items:center;gap:7px;transition:.18s}
+.btn-ai:hover{opacity:.9}.btn-ai:active{transform:translateY(2px)}
+.btn-ai:disabled{opacity:.5;cursor:not-allowed}
+.sc-ai-section{margin-top:10px;border-top:1.5px solid var(--br);padding-top:12px;display:none}
+.sc-ai-section.show{display:block}
+.ai-loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:20px;color:var(--b);font-size:.82rem;font-weight:700}
+.ai-loading .lds{width:22px;height:22px;border:3px solid var(--bl);border-top-color:var(--b);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.improve-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}
+@media(max-width:520px){.improve-cols{grid-template-columns:1fr}}
+.improve-col{border-radius:12px;padding:12px 14px;font-size:.78rem;font-weight:600;line-height:1.65}
+.improve-col-label{font-size:.64rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.improve-col.orig{background:#F5F5F5;border:1.5px solid var(--br);color:var(--tl)}
+.improve-col.orig .improve-col-label{color:var(--tm)}
+.improve-col.impr{background:#F0F4FF;border:1.5px solid #BFD0FF;color:var(--t)}
+.improve-col.impr .improve-col-label{color:#4B22CC}
+.improve-col mark{background:#D6EDFF;color:#1a4a8a;border-radius:3px;padding:0 2px;font-weight:800}
+.improve-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.ai-error{background:var(--rl);border-radius:10px;padding:10px 14px;font-size:.8rem;font-weight:700;color:var(--r);text-align:center}
+
+/* ─── SHADOWING MODAL ─── */
+#shadow-modal{position:fixed;inset:0;z-index:600;display:none;flex-direction:column;background:#0F0F1A;color:#fff;padding:20px}
+#shadow-modal.open{display:flex}
+.shadow-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-shrink:0}
+.shadow-top h3{font-size:1rem;font-weight:900;color:#fff}
+.shadow-close{background:rgba(255,255,255,.12);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer}
+.shadow-improved-box{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.18);border-radius:16px;padding:18px 20px;font-size:1rem;font-weight:700;line-height:1.75;color:#fff;flex:1;overflow-y:auto;margin-bottom:16px;max-height:35vh}
+.shadow-improved-box mark{background:rgba(111,66,255,.45);color:#fff;border-radius:4px;padding:0 3px;font-weight:900}
+.shadow-status{text-align:center;font-size:.82rem;font-weight:800;color:rgba(255,255,255,.6);margin-bottom:12px;min-height:22px;flex-shrink:0}
+.shadow-rec-area{display:flex;flex-direction:column;align-items:center;gap:14px;flex-shrink:0}
+.shadow-transcript{width:100%;max-width:560px;min-height:56px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);border-radius:12px;padding:12px 16px;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.8);line-height:1.5;text-align:left}
+.shadow-btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.shadow-compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:600px;margin-top:12px;display:none}
+.shadow-compare.show{display:grid}
+@media(max-width:500px){.shadow-compare{grid-template-columns:1fr}}
+.shadow-cmp-box{background:rgba(255,255,255,.07);border-radius:10px;padding:10px 13px;font-size:.76rem;font-weight:600;line-height:1.55;color:rgba(255,255,255,.8)}
+.shadow-cmp-label{font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.45);margin-bottom:5px}
+
+/* ─── LM STUDIO STATUS DOT ─── */
+#lms-dot{width:9px;height:9px;border-radius:50%;background:var(--r);flex-shrink:0;transition:.3s;cursor:pointer}
+#lms-cfg-btn{background:none;border:1.5px solid var(--br);color:var(--tm);padding:5px 10px;border-radius:20px;font:.72rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px;transition:.2s}
+#lms-cfg-btn:hover{border-color:var(--b);color:var(--b)}
+/* ─── LM STUDIO MODAL ─── */
+#lms-modal{position:fixed;inset:0;z-index:700;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+#lms-modal.open{display:flex}
+.lms-card{background:var(--w);border-radius:20px;padding:26px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.lms-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.lms-card-hdr h3{font-size:1.05rem;font-weight:900}
+.lms-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--tm);padding:2px 6px;border-radius:6px}
+.lms-card p{font-size:.8rem;font-weight:600;color:var(--tl);line-height:1.5;margin-bottom:14px}
+.lms-steps{background:var(--bg);border-radius:10px;padding:10px 14px;margin-bottom:14px}
+.lms-step{font-size:.76rem;font-weight:700;color:var(--t);padding:3px 0;display:flex;gap:8px;align-items:center}
+.lms-step span{font-size:.9rem}
+.lms-model-rec{background:#E8F8E0;border-radius:8px;padding:8px 12px;font-size:.74rem;font-weight:700;color:var(--gd);margin-bottom:14px;line-height:1.5}
+.lms-field-label{font-size:.72rem;font-weight:900;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.lms-input{width:100%;border:2px solid var(--br);border-radius:10px;padding:9px 13px;font:.86rem/1 'Nunito',sans-serif;font-weight:700;color:var(--t);outline:none;margin-bottom:10px;transition:.2s}
+.lms-input:focus{border-color:var(--b)}
+#lms-test-btn{background:var(--bg);border:1.5px solid var(--br);border-radius:8px;padding:8px 16px;font:.78rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;color:var(--t);width:100%;margin-bottom:14px;transition:.2s}
+#lms-test-btn:hover{border-color:var(--b);color:var(--b)}
+/* ─── MODE TOGGLE BUTTONS ─── */
+.lms-mode-btn{flex:1;padding:9px 12px;border-radius:10px;border:2px solid var(--br);background:var(--bg);font:.8rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;color:var(--tm);transition:.2s;text-align:center}
+.lms-mode-btn.active{background:var(--b);border-color:var(--bd);color:#fff}
+.lms-mode-btn:hover:not(.active){border-color:var(--b);color:var(--b)}
+/* ─── WELCOME SCREEN ─── */
+#welcome-screen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#58CC02 0%,#1CB0F6 100%)}
+#welcome-screen.hidden{display:none}
+.wc-card{background:#fff;border-radius:24px;padding:36px 32px;max-width:420px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.25);text-align:center}
+.wc-logo{font-size:3rem;margin-bottom:6px}
+.wc-title{font-size:1.4rem;font-weight:900;color:var(--t);margin-bottom:4px}
+.wc-sub{font-size:.8rem;font-weight:700;color:var(--tm);margin-bottom:24px;letter-spacing:.3px}
+.wc-label{font-size:.72rem;font-weight:900;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;text-align:left;margin-bottom:5px}
+.wc-input{width:100%;border:2px solid var(--br);border-radius:12px;padding:11px 14px;font:.9rem/1 'Nunito',sans-serif;font-weight:700;color:var(--t);outline:none;margin-bottom:6px;transition:.2s}
+.wc-input:focus{border-color:var(--b)}
+.wc-hint{font-size:.7rem;font-weight:600;color:var(--tm);text-align:left;margin-bottom:18px}
+.wc-hint a{color:var(--b);text-decoration:none}
+.wc-btn{width:100%;padding:13px;border:none;border-radius:12px;background:var(--g);color:#fff;font:900 1rem/1 'Nunito',sans-serif;cursor:pointer;transition:.2s;margin-bottom:10px}
+.wc-btn:hover{background:var(--gd)}
+.wc-btn:disabled{opacity:.5;cursor:not-allowed}
+.wc-err{font-size:.75rem;font-weight:700;color:var(--r);min-height:18px;margin-top:-8px;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<!-- ═══ WELCOME / API KEY SCREEN ═══ -->
+<div id="welcome-screen">
+  <div class="wc-card">
+    <div class="wc-logo">🦜</div>
+    <div class="wc-title">DET Speaking Practice</div>
+    <div class="wc-sub">DUOLINGO ENGLISH TEST · 2025–2026</div>
+    <div class="wc-label">Tu API Key de Anthropic</div>
+    <input class="wc-input" id="wc-key-input" type="password" placeholder="sk-ant-api03-…" autocomplete="off" onkeydown="if(event.key==='Enter')enterApp()">
+    <div class="wc-hint">Obtén tu key gratis en <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a> · Se guarda solo en este navegador.</div>
+    <div class="wc-err" id="wc-err"></div>
+    <button class="wc-btn" id="wc-btn" onclick="enterApp()">Entrar →</button>
+  </div>
+</div>
+
+<!-- ═══ TOP BAR ═══ -->
+<header id="topbar">
+  <div id="tb-left">
+    <span id="tb-logo">🦜</span>
+    <div id="tb-titles"><b>Duolingo English Test</b><small>SPEAKING PRACTICE · 2025–2026</small></div>
+  </div>
+  <div id="tb-right">
+    <span id="tb-phase"></span>
+    <span id="tb-timer"></span>
+    <span id="xp-badge">⚡ 0 XP</span>
+    <button id="lms-cfg-btn" onclick="openLMSModal()"><div id="lms-dot"></div>IA Config</button>
+    <button id="tb-exit" onclick="goHome()">✕ Exit</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ─── PREP OVERLAY ─── -->
+<div id="prep-overlay">
+  <h5>🧠 Tu estructura</h5>
+  <div id="prep-overlay-body"></div>
+</div>
+
+<!-- ═══ HOME ═══ -->
+<div id="screen-home" class="active">
+  <div class="home-hero">
+    <h1>Choose a Speaking Task</h1>
+    <p>Real DET format · Microphone recording · AI reads questions aloud</p>
+    <div class="pill-row">
+      <span class="pill g">🎙 Real Mic</span>
+      <span class="pill">🔊 TTS Questions</span>
+      <span class="pill">📝 Live Transcript</span>
+      <span class="pill y">🤖 AI Interactive</span>
+    </div>
+  </div>
+
+  <!-- Daily Goal Widget -->
+  <div class="daily-goal">
+    <div class="dg-icon">🎯</div>
+    <div class="dg-info">
+      <div class="dg-title">Meta diaria · Daily Goal — 100 XP</div>
+      <div class="dg-bar-wrap"><div class="dg-bar-fill" id="dg-bar"></div></div>
+      <div class="dg-sub" id="dg-sub">0 / 100 XP · 0 ejercicios hoy</div>
+    </div>
+    <div class="dg-streak">
+      <span class="dg-streak-num" id="dg-streak-num">0</span>
+      <span class="dg-streak-lbl">🔥 días</span>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card" onclick="goTo('photo')">
+      <div class="card-ico">🖼️</div>
+      <div class="card-title">Speak About the Photo</div>
+      <div class="card-desc">Describe a photo in detail. Structure your answer from general to specific.</div>
+      <span class="card-tag">20s prep · 90s response</span>
+      <div class="card-stat"><span>25</span> photos · <span>1</span> per exam</div>
+    </div>
+    <div class="card" onclick="goTo('read')">
+      <div class="card-ico">📖</div>
+      <div class="card-title">Read, Then Speak</div>
+      <div class="card-desc">Read a prompt, hear it spoken aloud, then give a structured response.</div>
+      <span class="card-tag">20s prep · 90s response</span>
+      <div class="card-stat"><span>80+</span> questions · AI reads aloud</div>
+    </div>
+    <div class="card" onclick="goTo('sample')">
+      <div class="card-ico">🎤</div>
+      <div class="card-title">Speaking Sample</div>
+      <div class="card-desc">Extended response viewed by universities. This is your interview.</div>
+      <span class="card-tag">30s prep · up to 3 min</span>
+      <div class="card-stat"><span>60+</span> questions · 4 categories</div>
+    </div>
+    <div class="card" onclick="goTo('interactive')">
+      <div class="card-ico">🤖</div>
+      <div class="card-title">Interactive Speaking</div>
+      <div class="card-desc">6 questions on 2 topics. AI avatar speaks each question to you naturally.</div>
+      <span class="card-tag new">NEW 2025 · 35s each</span>
+      <div class="card-stat"><span>20</span> sets · <span>120+</span> questions</div>
+    </div>
+    <div class="card drill-card" onclick="goTo('drill')">
+      <div class="card-ico">⚡</div>
+      <div class="card-title">Template Drill</div>
+      <div class="card-desc">Practica cada frase del template paso a paso. Escucha → Di → Autoevalúa. ¡La forma más rápida de memorizar!</div>
+      <span class="card-tag new">+2 XP por frase · 4 templates</span>
+      <div class="card-stat"><span>18</span> frases · memorización rápida</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHOTO ═══ -->
+<div id="screen-photo" class="screen">
+  <div id="mic-banner-photo" class="mic-banner-ui" style="background:var(--yl);border:2px solid var(--y);border-radius:14px;padding:12px 18px;margin-bottom:16px;display:none;align-items:center;gap:10px">
+    <span>🎤</span><p style="font-size:.82rem;font-weight:700;color:#7A5F00;flex:1;margin:0">Allow microphone access to record your responses</p>
+    <button onclick="askMic()" style="background:var(--y);border:none;border-radius:10px;padding:7px 14px;font:.8rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;color:#5C3D00">Allow Mic</button>
+  </div>
+  <div class="sec-hdr"><span class="sec-ico">🖼️</span><div class="sec-info"><h2>Speak About the Photo</h2><p>Preparation: 20 sec · Response: up to 90 sec (stop early with ✅ Done)</p></div></div>
+  <div class="stat-row">
+    <div class="stat-p">🖼️ Practiced: <span class="v" id="ph-count">0</span></div>
+    <div class="stat-p">🎯 Photos available: <span class="v">25</span></div>
+  </div>
+
+  <div class="phase-banner idle" id="ph-banner"><div class="ph-left"><span id="ph-banner-icon">⏸</span><span id="ph-banner-text">Ready — press Start</span></div><span class="ph-num" id="ph-banner-num">—</span></div>
+  <div class="bar-wrap"><div class="bar-fill" id="ph-bar" style="width:100%"></div></div>
+
+  <div class="photo-card">
+    <div class="photo-instr">💡 Describe what you see in detail — use the 20 seconds to plan your answer</div>
+    <div class="photo-img-wrap">
+      <div class="photo-ph" id="ph-placeholder"><div class="ico">📸</div><p>Press "New Photo" to begin</p></div>
+      <img id="ph-img" src="" alt="" style="opacity:0"
+        onload="this.style.opacity=1;document.getElementById('ph-placeholder').style.display='none'"
+        onerror="this.style.opacity=0;document.getElementById('ph-placeholder').style.display='flex'">
+    </div>
+    <div class="photo-footer">
+      <div class="photo-footer-main">
+        <div class="photo-title" id="ph-title">— Press New Photo to begin —</div>
+        <div class="photo-sub" id="ph-sub">Preparation guide available below</div>
+      </div>
+      <button class="hint-toggle" onclick="toggleHint('ph-hint')">👁 Show Hints</button>
+    </div>
+    <div class="hint-box" id="ph-hint"><p id="ph-hint-text">Hint will appear here.</p></div>
+  </div>
+
+  <div class="rec-area">
+    <div class="mic-ring"><div class="mic-pulse" id="ph-pulse"></div><button class="mic-btn" id="ph-mic" onclick="togglePhotoRec()">🎙️</button></div>
+    <canvas id="wv-photo" width="500" height="60"></canvas>
+    <div class="transcript-box" id="ph-transcript"></div>
+    <div class="playback-row" id="ph-playback">
+      <button class="play-back-btn" onclick="playBack('ph-audio')">▶ Play back</button>
+      <span class="rec-size" id="ph-rec-size"></span>
+    </div>
+    <audio id="ph-audio"></audio>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="newPhoto()">🔀 New Photo</button>
+      <button class="btn btn-g" id="ph-start" onclick="startPhotoTimer()">▶ Start</button>
+      <button class="btn btn-g" id="ph-done" onclick="finishEarly('photo')" style="display:none;background:var(--gd)">✅ Done</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetPhoto()">↺ Reset</button>
+    </div>
+    <p class="kbd-hint"><kbd>Space</kbd> start · <kbd>R</kbd> reset · <kbd>N</kbd> new photo · <kbd>D</kbd> done early</p>
+  </div>
+
+  <div class="tpl-card">
+    <div class="tpl-hdr"><h4>📋 Estructura — Foto (90 seg)</h4><button class="tpl-test-btn" onclick="toggleMemorize(this)">🧠 Memorizar</button></div>
+    <div class="tpl-body">
+      <div class="tpl-step"><span class="tpl-n">1</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Visión general</span><span class="tpl-time">0–15s</span><button class="tpl-hear" onclick="hearPhrase('This photo shows... The main focus of this image is...')">🔊</button></div>
+        <div class="tpl-phrase">"This photo shows…" / "The main focus is…"</div>
+        <span class="tpl-pron">🔊 "DIS foh-toh shohs…" / "De MEIN fo-kus is…"</span>
+        <span class="tpl-es">🇪🇸 "Esta foto muestra…" / "El foco principal es…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">2</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Primer plano / Personas</span><span class="tpl-time">15–40s</span><button class="tpl-hear" onclick="hearPhrase('In the foreground I can see... A person who appears to be...')">🔊</button></div>
+        <div class="tpl-phrase">"In the foreground I can see…" / "A person who appears to be [verbo]-ing…"</div>
+        <span class="tpl-pron">🔊 "In de FOR-graund ai ken sii…" / "A PER-son hu a-PIERS to bi…"</span>
+        <span class="tpl-es">🇪🇸 "En el primer plano puedo ver…" / "Una persona que parece estar…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">3</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Fondo / Lugar</span><span class="tpl-time">40–60s</span><button class="tpl-hear" onclick="hearPhrase('In the background I notice... The setting appears to be...')">🔊</button></div>
+        <div class="tpl-phrase">"In the background I notice…" / "The setting appears to be…"</div>
+        <span class="tpl-pron">🔊 "In de BAK-graund ai NOH-tis…" / "De SE-ting a-PIERS to bi…"</span>
+        <span class="tpl-es">🇪🇸 "En el fondo noto…" / "El lugar parece ser…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">4</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Ambiente / Emoción</span><span class="tpl-time">60–80s</span><button class="tpl-hear" onclick="hearPhrase('The atmosphere of this photo is... I think the person feels...')">🔊</button></div>
+        <div class="tpl-phrase">"The atmosphere is…" / "I think the person feels…"</div>
+        <span class="tpl-pron">🔊 "De AT-mos-fier is…" / "AI zink de PER-son fiils…"</span>
+        <span class="tpl-es">🇪🇸 "La atmósfera es…" / "Creo que la persona siente…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">5</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Conclusión</span><span class="tpl-time">80–90s</span><button class="tpl-hear" onclick="hearPhrase('This reminds me of... In my country, people often...')">🔊</button></div>
+        <div class="tpl-phrase">"This reminds me of…" / "In my country, people often…"</div>
+        <span class="tpl-pron">🔊 "DIS ri-MAIINDS mi of…" / "In mai CAN-tri PII-pul OF-en…"</span>
+        <span class="tpl-es">🇪🇸 "Esto me recuerda a…" / "En mi país, la gente a menudo…"</span>
+      </div></div>
+      <div class="tips-bx"><h5>🇪🇸 Consejos clave</h5><ul>
+        <li><b>foreground</b> = primer plano · <b>background</b> = fondo · <b>left/right</b> = izquierda/derecha</li>
+        <li>Di "It looks like…" (Parece que…) — nunca inventes datos falsos</li>
+        <li>Nunca te quedes en silencio — especula sobre qué pasó antes o después</li>
+        <li>Meta: 75–90 segundos de habla continua</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ READ THEN SPEAK ═══ -->
+<div id="screen-read" class="screen">
+  <div class="sec-hdr"><span class="sec-ico">📖</span><div class="sec-info"><h2>Read, Then Speak</h2><p>Prep 20s · Response up to 90s · AI reads question aloud · ✅ Done to stop early</p></div></div>
+  <div class="stat-row"><div class="stat-p">📖 Practiced: <span class="v" id="rd-count">0</span></div><div class="stat-p">🎯 Questions: <span class="v">80+</span></div></div>
+
+  <div class="phase-banner idle" id="rd-banner"><div class="ph-left"><span id="rd-banner-icon">⏸</span><span id="rd-banner-text">Ready</span></div><span class="ph-num" id="rd-banner-num">—</span></div>
+  <div class="bar-wrap"><div class="bar-fill" id="rd-bar" style="width:100%"></div></div>
+
+  <div class="q-card">
+    <button class="copy-btn" id="rd-copy" onclick="copyQ('rd-q','rd-copy')">📋 Copy</button>
+    <div class="q-label">Read the question — then respond for 90 seconds</div>
+    <div class="q-text" id="rd-q">Press "New Question" to begin.</div>
+  </div>
+  <div class="tts-bar" id="rd-tts-bar">
+    <div class="tts-dots show" id="rd-tts-dots"><div class="tts-dot"></div><div class="tts-dot"></div><div class="tts-dot"></div></div>
+    <span id="rd-tts-label" class="show">AI is reading the question…</span>
+  </div>
+
+  <div class="rec-area">
+    <div class="mic-ring"><div class="mic-pulse" id="rd-pulse"></div><button class="mic-btn disabled" id="rd-mic" onclick="toggleReadRec()">🎙️</button></div>
+    <canvas id="wv-read" width="500" height="60"></canvas>
+    <div class="transcript-box" id="rd-transcript"></div>
+    <div class="playback-row" id="rd-playback">
+      <button class="play-back-btn" onclick="playBack('rd-audio')">▶ Play back</button>
+      <span class="rec-size" id="rd-rec-size"></span>
+    </div>
+    <audio id="rd-audio"></audio>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="newReadQ()">🔀 New Question</button>
+      <button class="btn btn-g" id="rd-start" onclick="startReadTimer()">▶ Start</button>
+      <button class="btn btn-g" id="rd-done" onclick="finishEarly('read')" style="display:none;background:var(--gd)">✅ Done</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetRead()">↺ Reset</button>
+    </div>
+    <p class="kbd-hint"><kbd>Space</kbd> start · <kbd>R</kbd> reset · <kbd>N</kbd> new question · <kbd>D</kbd> done early</p>
+  </div>
+
+  <div class="tpl-card">
+    <div class="tpl-hdr"><h4>📋 Estructura — Leer y Hablar (90 seg)</h4><button class="tpl-test-btn" onclick="toggleMemorize(this)">🧠 Memorizar</button></div>
+    <div class="tpl-body">
+      <div class="tpl-step"><span class="tpl-n">1</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Tu opinión</span><span class="tpl-time">0–12s</span><button class="tpl-hear" onclick="hearPhrase('In my opinion... I think that... I believe...')">🔊</button></div>
+        <div class="tpl-phrase">"In my opinion,…" / "I think that…" / "I believe…"</div>
+        <span class="tpl-pron">🔊 "In mai o-PIN-ion…" / "AI zink dat…" / "AI bi-LIIV…"</span>
+        <span class="tpl-es">🇪🇸 "En mi opinión…" / "Yo creo que…" / "Yo pienso…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">2</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Primer punto + razón</span><span class="tpl-time">12–38s</span><button class="tpl-hear" onclick="hearPhrase('First of all... One reason is... For example...')">🔊</button></div>
+        <div class="tpl-phrase">"First of all,…" / "One reason is…" / "For example,…"</div>
+        <span class="tpl-pron">🔊 "FERST of ol…" / "UAN RI-son is…" / "For eg-ZAM-pul…"</span>
+        <span class="tpl-es">🇪🇸 "En primer lugar…" / "Una razón es…" / "Por ejemplo…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">3</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Segundo punto</span><span class="tpl-time">38–62s</span><button class="tpl-hear" onclick="hearPhrase('Also... Another reason is... In addition...')">🔊</button></div>
+        <div class="tpl-phrase">"Also,…" / "Another reason is…" / "In addition,…"</div>
+        <span class="tpl-pron">🔊 "OL-so…" / "a-NO-der RI-son is…" / "In a-DI-shon…"</span>
+        <span class="tpl-es">🇪🇸 "También…" / "Otra razón es…" / "Además…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">4</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Contrapunto (opcional)</span><span class="tpl-time">62–78s</span><button class="tpl-hear" onclick="hearPhrase('However, I still believe... Some people think differently, but I think...')">🔊</button></div>
+        <div class="tpl-phrase">"However,…" / "Some people think… but I believe…"</div>
+        <span class="tpl-pron">🔊 "Jau-E-ver…" / "SOM PII-pul zink… bat AI bi-LIIV…"</span>
+        <span class="tpl-es">🇪🇸 "Sin embargo…" / "Algunas personas piensan… pero yo creo…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">5</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Conclusión</span><span class="tpl-time">78–90s</span><button class="tpl-hear" onclick="hearPhrase('In conclusion, I believe... That is why I think...')">🔊</button></div>
+        <div class="tpl-phrase">"In conclusion,…" / "That is why I think…"</div>
+        <span class="tpl-pron">🔊 "In con-CLU-shon…" / "Dat is uai AI zink…"</span>
+        <span class="tpl-es">🇪🇸 "En conclusión…" / "Por eso creo que…"</span>
+      </div></div>
+      <div class="tips-bx"><h5>🇪🇸 Consejos clave</h5><ul>
+        <li>Solo UNA grabación — sin pausa ni repetición</li>
+        <li>Siempre incluye un ejemplo personal concreto</li>
+        <li>Meta: 65–80 segundos (no fuerces los 90)</li>
+        <li><b>First</b> = Primero · <b>Also</b> = También · <b>However</b> = Sin embargo · <b>In conclusion</b> = En conclusión</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SPEAKING SAMPLE ═══ -->
+<div id="screen-sample" class="screen">
+  <div class="sec-hdr"><span class="sec-ico">🎤</span><div class="sec-info"><h2>Speaking Sample</h2><p>Universities view this · Prep 30s · Up to 3 min (ideal: 90s–2min) · ✅ Done to stop early</p></div></div>
+  <div class="tabs" id="sample-tabs">
+    <button class="tab active" onclick="filterSample('all',this)">All</button>
+    <button class="tab" onclick="filterSample('describe',this)">Describe</button>
+    <button class="tab" onclick="filterSample('compare',this)">Compare</button>
+    <button class="tab" onclick="filterSample('opinion',this)">Opinion</button>
+    <button class="tab" onclick="filterSample('experience',this)">Experience</button>
+  </div>
+
+  <div class="phase-banner idle" id="sp-banner"><div class="ph-left"><span id="sp-banner-icon">⏸</span><span id="sp-banner-text">Ready</span></div><span class="ph-num" id="sp-banner-num">—</span></div>
+  <div class="bar-wrap"><div class="bar-fill" id="sp-bar" style="width:100%"></div></div>
+
+  <div class="q-card">
+    <button class="copy-btn" id="sp-copy" onclick="copyQ('sp-q','sp-copy')">📋 Copy</button>
+    <div class="q-badge describe" id="sp-badge">Type</div>
+    <div class="q-text" id="sp-q">Press "New Question" to begin.</div>
+  </div>
+  <div class="tts-bar" id="sp-tts-bar" style="display:none">
+    <div class="tts-dots show"><div class="tts-dot"></div><div class="tts-dot"></div><div class="tts-dot"></div></div>
+    <span style="font-size:.76rem;font-weight:700;color:var(--b);margin-left:4px">AI reading…</span>
+  </div>
+
+  <div class="rec-area">
+    <div class="mic-ring"><div class="mic-pulse" id="sp-pulse"></div><button class="mic-btn disabled" id="sp-mic" onclick="toggleSampleRec()">🎙️</button></div>
+    <canvas id="wv-sample" width="500" height="60"></canvas>
+    <div class="transcript-box" id="sp-transcript"></div>
+    <div class="playback-row" id="sp-playback">
+      <button class="play-back-btn" onclick="playBack('sp-audio')">▶ Play back</button>
+      <span class="rec-size" id="sp-rec-size"></span>
+    </div>
+    <audio id="sp-audio"></audio>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="newSampleQ()">🔀 New Question</button>
+      <button class="btn btn-g" id="sp-start" onclick="startSampleTimer()">▶ Start</button>
+      <button class="btn btn-g" id="sp-done" onclick="finishEarly('sample')" style="display:none;background:var(--gd)">✅ Done</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetSample()">↺ Reset</button>
+    </div>
+    <p class="kbd-hint"><kbd>Space</kbd> start · <kbd>R</kbd> reset · <kbd>D</kbd> done early</p>
+  </div>
+
+  <div class="tpl-card">
+    <div class="tpl-hdr"><h4>📋 Marco I-LAST — Speaking Sample (1–3 min)</h4><button class="tpl-test-btn" onclick="toggleMemorize(this)">🧠 Memorizar</button></div>
+    <div class="tpl-body">
+      <div class="tpl-step"><span class="tpl-n b">I</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Introducción</span><span class="tpl-time">0–15s</span><button class="tpl-hear" onclick="hearPhrase('This is an interesting question. I would like to talk about this topic.')">🔊</button></div>
+        <div class="tpl-phrase">"This is an interesting question. I'd like to talk about…"</div>
+        <span class="tpl-pron">🔊 "DIS is en in-TER-es-ting QUES-chen. Aid laik to tok a-BAUT…"</span>
+        <span class="tpl-es">🇪🇸 "Esta es una pregunta interesante. Me gustaría hablar sobre…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n b">L</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Experiencia personal</span><span class="tpl-time">15–55s</span><button class="tpl-hear" onclick="hearPhrase('In my experience... When I was young, I noticed that... I remember that...')">🔊</button></div>
+        <div class="tpl-phrase">"In my experience,…" / "When I was young,…" / "I remember that…"</div>
+        <span class="tpl-pron">🔊 "In mai ex-PIER-ens…" / "Uen ai uos yong…" / "AI ri-MEM-ber dat…"</span>
+        <span class="tpl-es">🇪🇸 "En mi experiencia…" / "Cuando era joven…" / "Recuerdo que…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n b">A</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Vocabulario avanzado</span><span class="tpl-time">en todo momento</span><button class="tpl-hear" onclick="hearPhrase('This has a significant impact. It is important because. As a result...')">🔊</button></div>
+        <div class="tpl-phrase">"important" / "because of this" / "as a result" / "in my view"</div>
+        <span class="tpl-pron">🔊 "im-POR-tant" / "bi-COS of DIS" / "az a ri-ZALT" / "in mai viu"</span>
+        <span class="tpl-es">🇪🇸 "importante" / "por esto" / "como resultado" / "en mi opinión"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n b">S</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Detalle específico</span><span class="tpl-time">55–120s</span><button class="tpl-hear" onclick="hearPhrase('For example... For instance... A good example is...')">🔊</button></div>
+        <div class="tpl-phrase">"For example,…" / "For instance,…" / "A good example is…"</div>
+        <span class="tpl-pron">🔊 "For eg-ZAM-pul…" / "For IN-stens…" / "A gud eg-ZAM-pul is…"</span>
+        <span class="tpl-es">🇪🇸 "Por ejemplo…" / "Por ejemplo (formal)…" / "Un buen ejemplo es…"</span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n b">T</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">Conclusión</span><span class="tpl-time">últimos 30s</span><button class="tpl-hear" onclick="hearPhrase('In conclusion, I believe that... To summarize...')">🔊</button></div>
+        <div class="tpl-phrase">"In conclusion,…" / "To summarize,…" / "I believe that…"</div>
+        <span class="tpl-pron">🔊 "In con-CLU-shon…" / "Tu SUM-a-raiz…" / "AI bi-LIIV dat…"</span>
+        <span class="tpl-es">🇪🇸 "En conclusión…" / "Para resumir…" / "Creo que…"</span>
+      </div></div>
+      <div class="tips-bx"><h5>🇪🇸 Consejos clave</h5><ul>
+        <li>Las universidades ven esta sección — habla natural, mira a la cámara</li>
+        <li>Meta: 90 seg–2 min sin palabras de relleno (um, uh)</li>
+        <li>No memorices guiones — sonarás robótico</li>
+        <li>Las pausas deliberadas entre ideas muestran fluidez</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INTERACTIVE SPEAKING ═══ -->
+<div id="screen-interactive" class="screen">
+  <div class="sec-hdr"><span class="sec-ico">🤖</span><div class="sec-info"><h2>Interactive Speaking <span style="background:#E8F8E0;color:var(--gd);padding:2px 10px;border-radius:20px;font-size:.7rem;font-weight:900;margin-left:6px">NEW 2025</span></h2><p>6 questions · 2 topics · AI speaks each question · 35s each</p></div></div>
+
+  <div class="is-prog" id="is-prog"></div>
+
+  <div class="avatar-wrap">
+    <div class="avatar-circle" id="is-avatar"><div class="talk-ring"></div>🦜</div>
+    <div class="avatar-label" id="is-avatar-label">ARIA · DET AI Examiner</div>
+  </div>
+  <div class="tts-bar" id="is-tts-bar" style="margin-bottom:10px">
+    <div class="tts-dots" id="is-tts-dots"><div class="tts-dot"></div><div class="tts-dot"></div><div class="tts-dot"></div></div>
+    <span id="is-tts-label" style="font-size:.76rem;font-weight:700;color:var(--b);margin-left:4px"></span>
+  </div>
+
+  <div class="q-card">
+    <button class="copy-btn" id="is-copy" onclick="copyQ('is-q','is-copy')">📋 Copy</button>
+    <div class="q-badge t1" id="is-badge">Topic 1</div>
+    <div class="q-topic" id="is-topic-name"></div>
+    <div class="q-label" id="is-q-label">Question 1 of 6</div>
+    <div class="q-text" id="is-q">Press "New Set" to begin a conversation with the AI examiner.</div>
+  </div>
+
+  <div class="phase-banner idle" id="is-banner"><div class="ph-left"><span id="is-banner-icon">⏸</span><span id="is-banner-text">Ready</span></div><span class="ph-num" id="is-banner-num">—</span></div>
+  <div class="bar-wrap"><div class="bar-fill" id="is-bar" style="width:100%"></div></div>
+
+  <div class="rec-area">
+    <div class="mic-ring"><div class="mic-pulse" id="is-pulse"></div><button class="mic-btn disabled" id="is-mic" onclick="startISTimer()">🎙️</button></div>
+    <canvas id="wv-is" width="500" height="60"></canvas>
+    <div class="transcript-box" id="is-transcript"></div>
+    <div class="playback-row" id="is-playback">
+      <button class="play-back-btn" onclick="playBack('is-audio')">▶ Play back</button>
+    </div>
+    <audio id="is-audio"></audio>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="newISSet()">🔀 New Set</button>
+      <button class="btn btn-g" id="is-done" onclick="finishEarly('interactive')" style="display:none;background:var(--gd)">✅ Done</button>
+      <button class="btn btn-b" id="is-next" onclick="nextISQ()" style="display:none">Next Question →</button>
+    </div>
+    <p class="kbd-hint">Set: <strong id="is-set-label">—</strong> · <kbd>Space</kbd> answer · <kbd>D</kbd> done early</p>
+  </div>
+
+  <div class="tpl-card">
+    <div class="tpl-hdr"><h4>📋 Estructura Básica — 35 segundos</h4><button class="tpl-test-btn" onclick="toggleMemorize(this)">🧠 Memorizar</button></div>
+    <div class="tpl-body">
+      <div class="tpl-step"><span class="tpl-n">1</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">🎯 Respuesta directa</span><span class="tpl-time">0–8s</span><button class="tpl-hear" onclick="hearPhrase('I think... I like... Yes, I agree...')">🔊</button></div>
+        <div class="tpl-phrase">"I think [tu opinión]." / "I like [tema]." / "Yes, I agree."</div>
+        <span class="tpl-pron">🔊 "AI zink…" / "AI laik…" / "YES, ai a-GRII"</span>
+        <span class="tpl-es">🇪🇸 "Yo creo…" / "Me gusta…" / "Sí, estoy de acuerdo"<br><b>💡 Di tu opinión DE INMEDIATO. Sin introducciones largas.</b></span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">2</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">💬 Razón / Por qué</span><span class="tpl-time">8–20s</span><button class="tpl-hear" onclick="hearPhrase('Because... The reason is... I say this because...')">🔊</button></div>
+        <div class="tpl-phrase">"Because [razón]." / "The reason is [explicación]."</div>
+        <span class="tpl-pron">🔊 "bi-COS…" / "De RI-son is…"</span>
+        <span class="tpl-es">🇪🇸 "Porque…" / "La razón es…"<br><b>💡 "Because" = Porque. Una oración corta es suficiente.</b></span>
+      </div></div>
+      <div class="tpl-step"><span class="tpl-n">3</span><div class="tpl-phrase-card">
+        <div class="tpl-step-title"><span class="tpl-step-name">📌 Ejemplo personal</span><span class="tpl-time">20–35s</span><button class="tpl-hear" onclick="hearPhrase('For example... In my country... Where I am from...')">🔊</button></div>
+        <div class="tpl-phrase">"For example, [tu ejemplo]." / "In my country, [dato]."</div>
+        <span class="tpl-pron">🔊 "For eg-ZAM-pul…" / "In mai CAN-tri…"</span>
+        <span class="tpl-es">🇪🇸 "Por ejemplo…" / "En mi país…"<br><b>💡 Usa tu propia vida. Es lo más fácil de recordar.</b></span>
+      </div></div>
+      <div class="tips-bx" style="background:#FFF0F5;border-radius:10px;padding:11px 15px;margin-top:12px"><h5 style="color:#C0392B">🇪🇸 Pronunciación — Sonidos difíciles</h5><ul>
+        <li><b>"th"</b> → lengua ENTRE los dientes: "think" = "zink" · "the" = "de"</li>
+        <li><b>"v"</b> → labio inferior toca dientes superiores: "very" ≠ "bery"</li>
+        <li><b>"i" corta</b> → "think", "this", "in" suenan como "i" breve española</li>
+        <li><b>"r"</b> inglesa → NO vibra: suena suave, casi como "r" francesa</li>
+      </ul></div>
+      <div class="tips-bx" style="background:var(--yl);border-radius:10px;padding:11px 15px;margin-top:10px"><h5 style="color:var(--yd)">⏸ Si te congelas — Frases de rescate</h5><ul>
+        <li>"Well… I think…" = "Bueno… creo que…" (gana 2 segundos)</li>
+        <li>"That's a good question…" (gana 2 segundos)</li>
+        <li>"In my experience…" = "En mi experiencia…"</li>
+        <li>El tema cambia en la Pregunta 4 — observa el color del badge</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DRILL SCREEN ═══ -->
+<div id="screen-drill" class="screen">
+  <div class="sec-hdr">
+    <span class="sec-ico">⚡</span>
+    <div class="sec-info">
+      <h2>Template Drill</h2>
+      <p>Escucha la frase → Dila tú → Autoevalúa · +2 XP por frase correcta</p>
+    </div>
+  </div>
+
+  <div id="drill-type-tabs">
+    <button class="tab active" onclick="selectDrillType('photo',this)">🖼 Foto</button>
+    <button class="tab" onclick="selectDrillType('read',this)">📖 Leer+Hablar</button>
+    <button class="tab" onclick="selectDrillType('sample',this)">🎤 Sample</button>
+    <button class="tab" onclick="selectDrillType('interactive',this)">🤖 IS (35s)</button>
+  </div>
+
+  <div class="drill-progress-wrap">
+    <div class="drill-dots" id="drill-dots"></div>
+    <span id="drill-xp">+0 XP esta sesión</span>
+  </div>
+
+  <div id="drill-card-wrap">
+    <div class="phrase-big-card">
+      <div class="step-meta" id="drill-meta">Step 1/5</div>
+      <div class="step-name" id="drill-name">Visión general</div>
+      <div class="phrase-block" id="drill-phrase"></div>
+      <div class="phrase-es-box" id="drill-es"></div>
+      <div class="drill-countdown" id="drill-countdown">—</div>
+      <div class="btn-row" style="margin-bottom:10px">
+        <button class="btn btn-ghost btn-sm" onclick="hearDrillPhrase()">🔊 Escuchar</button>
+        <button class="btn btn-g" id="drill-say-btn" onclick="startDrillCountdown()">🎙 ¡Decirlo! (12s)</button>
+      </div>
+      <div class="self-eval" id="drill-eval">
+        <p style="font-size:.8rem;font-weight:800;color:var(--t);width:100%;text-align:center;margin-bottom:6px">¿Lo dijiste bien?</p>
+        <button class="se-btn se-ok" onclick="drillSelfEval(true)">✓ Sí, lo dije</button>
+        <button class="se-btn se-fail" onclick="drillSelfEval(false)">✗ Necesito practicar</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="goHome()">← Volver</button>
+      <button class="btn btn-b" id="drill-next-btn" onclick="nextDrillPhrase()" style="display:none">Siguiente frase →</button>
+    </div>
+  </div>
+
+  <div class="drill-complete-wrap" id="drill-complete-wrap">
+    <div class="trophy" id="dc-trophy">🏆</div>
+    <h3 id="dc-title">¡Perfecto! All phrases mastered!</h3>
+    <p id="dc-sub">+0 XP earned</p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="repeatDrill()">🔄 Repetir drill</button>
+      <button class="btn btn-g" onclick="goHome()">→ Practicar respuestas completas</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCORE MODAL ═══ -->
+<div id="score-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;padding:20px">
+  <div id="score-overlay" onclick="closeScore()" style="position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)"></div>
+  <div id="score-card">
+    <div style="text-align:center;margin-bottom:10px"><span style="font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--tm)">TU PUNTUACIÓN DET · YOUR SCORE</span></div>
+    <div class="sc-header">
+      <div class="sc-circle" id="sc-circle">
+        <div class="sc-circle-inner">
+          <span class="sc-num" id="sc-num">—</span>
+          <span class="sc-det">/ 160</span>
+        </div>
+      </div>
+      <div class="sc-right">
+        <div class="sc-grade-row">
+          <span class="sc-grade" id="sc-grade">—</span>
+          <span class="sc-level" id="sc-level">—</span>
+        </div>
+        <div class="sc-words" id="sc-words">— palabras · — ppm</div>
+      </div>
+    </div>
+    <div class="sc-section-lbl">Desglose · Breakdown</div>
+    <div class="sc-bars">
+      <div class="sc-bar-row"><span class="sc-bar-label">🗣 Fluidez</span><div class="sc-bar-track"><div class="sc-bar-fill" id="sb-fluency"></div></div><span class="sc-bar-val" id="sv-fluency">—</span></div>
+      <div class="sc-bar-row"><span class="sc-bar-label">📚 Vocabulario</span><div class="sc-bar-track"><div class="sc-bar-fill" id="sb-vocab"></div></div><span class="sc-bar-val" id="sv-vocab">—</span></div>
+      <div class="sc-bar-row"><span class="sc-bar-label">🔗 Estructura</span><div class="sc-bar-track"><div class="sc-bar-fill" id="sb-structure"></div></div><span class="sc-bar-val" id="sv-structure">—</span></div>
+      <div class="sc-bar-row"><span class="sc-bar-label">⏱ Uso del tiempo</span><div class="sc-bar-track"><div class="sc-bar-fill" id="sb-completion"></div></div><span class="sc-bar-val" id="sv-completion">—</span></div>
+    </div>
+    <div class="sc-section-lbl">Retroalimentación · Feedback</div>
+    <div class="sc-tips" id="sc-tips"></div>
+
+    <!-- AI IMPROVE -->
+    <div class="sc-ai-btn-wrap">
+      <button class="btn-ai" id="sc-ai-btn" onclick="requestImprovement()">🤖 Mejorar mi respuesta con IA</button>
+    </div>
+    <div class="sc-ai-section" id="sc-ai-section">
+      <div class="ai-loading" id="sc-ai-loading" style="display:none">
+        <div class="lds"></div> IA mejorando tu respuesta…
+      </div>
+      <div id="sc-ai-result" style="display:none">
+        <div class="improve-cols">
+          <div class="improve-col orig">
+            <div class="improve-col-label">🎙 Lo que dijiste</div>
+            <div id="sc-original-txt"></div>
+          </div>
+          <div class="improve-col impr">
+            <div class="improve-col-label">✨ Versión mejorada (DET)</div>
+            <div id="sc-improved-txt"></div>
+          </div>
+        </div>
+        <div class="improve-actions">
+          <button class="btn btn-ghost btn-sm" onclick="hearImproved()">🔊 Escuchar mejorada</button>
+          <button class="btn btn-b btn-sm" onclick="openShadowing()">🎙 Practicar esto →</button>
+        </div>
+      </div>
+      <div class="ai-error" id="sc-ai-error" style="display:none"></div>
+    </div>
+
+    <div class="sc-btns" id="sc-btns">
+      <button class="btn btn-ghost btn-sm" onclick="closeScore()">✕ Cerrar</button>
+      <button class="btn btn-g btn-sm" onclick="closeScore()">▶ Seguir Practicando</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SHADOWING MODAL ═══ -->
+<div id="shadow-modal">
+  <div class="shadow-top">
+    <h3>🎙 Práctica de Shadowing</h3>
+    <button class="shadow-close" onclick="closeShadowing()">✕</button>
+  </div>
+  <div class="shadow-status" id="shadow-status">Escucha la versión mejorada y repítela</div>
+  <div class="shadow-improved-box" id="shadow-text"></div>
+  <div class="shadow-rec-area">
+    <div class="mic-ring">
+      <div class="mic-pulse" id="shadow-pulse"></div>
+      <button class="mic-btn disabled" id="shadow-mic" onclick="toggleShadowRec()">🎙️</button>
+    </div>
+    <div class="shadow-transcript" id="shadow-transcript">Tu respuesta aparecerá aquí…</div>
+    <div class="shadow-btn-row">
+      <button class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="hearImprovedInShadow()">🔊 Escuchar de nuevo</button>
+      <button class="btn btn-g" id="shadow-rec-btn" onclick="startShadowRec()">🎙 Empezar a grabar</button>
+      <button class="btn btn-ghost btn-sm" id="shadow-compare-btn" style="display:none;color:#fff;border-color:rgba(255,255,255,.3)" onclick="showShadowCompare()">📊 Ver comparación</button>
+    </div>
+    <div class="shadow-compare" id="shadow-compare">
+      <div class="shadow-cmp-box"><div class="shadow-cmp-label">✨ Versión mejorada</div><div id="shadow-cmp-improved"></div></div>
+      <div class="shadow-cmp-box"><div class="shadow-cmp-label">🎙 Lo que repetiste</div><div id="shadow-cmp-yours"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ IA CONFIG MODAL ═══ -->
+<div id="lms-modal">
+  <div class="lms-card">
+    <div class="lms-card-hdr">
+      <h3>⚙️ Configuración de IA</h3>
+      <button class="lms-close" onclick="closeLMSModal()">✕</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="lms-mode-btn active" id="mode-claude-btn" onclick="setAIMode('claude')">☁️ Claude API <span style="font-size:.65rem;background:#E8F8E0;color:var(--gd);padding:2px 7px;border-radius:10px;margin-left:3px;font-weight:700">RÁPIDO</span></button>
+      <button class="lms-mode-btn" id="mode-lms-btn" onclick="setAIMode('lmstudio')">💻 LM Studio</button>
+    </div>
+    <div id="lms-claude-section">
+      <p>Claude Haiku responde en 1–3 segundos. Necesitas una API key de <a href="https://console.anthropic.com/" target="_blank" style="color:var(--b)">console.anthropic.com</a></p>
+      <div class="lms-model-rec">⚡ <b>claude-haiku-4-5</b> · Ultra rápido · ~$0.001 por corrección · Funciona en el celular</div>
+      <div class="lms-field-label">Tu API Key de Anthropic</div>
+      <input class="lms-input" id="claude-key-input" type="password" placeholder="sk-ant-api03-…" autocomplete="off">
+      <p style="font-size:.71rem;color:var(--tm);margin:-6px 0 12px">Se guarda solo en este navegador (localStorage) — nunca se envía a ningún servidor nuestro.</p>
+      <button id="claude-test-btn" onclick="testClaudeConnection()" style="background:var(--bg);border:1.5px solid var(--br);border-radius:8px;padding:8px 16px;font:.78rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;color:var(--t);width:100%;margin-bottom:14px;transition:.2s">🔌 Probar conexión</button>
+    </div>
+    <div id="lms-studio-section" style="display:none">
+      <p>Conecta con LM Studio en tu Mac. Solo funciona localmente — no en el celular.</p>
+      <div class="lms-steps">
+        <div class="lms-step"><span>1️⃣</span> Abre LM Studio en tu Mac</div>
+        <div class="lms-step"><span>2️⃣</span> Carga un modelo (recomendado: Qwen2.5-7B)</div>
+        <div class="lms-step"><span>3️⃣</span> Ve a <b>Local Server</b> → <b>Start Server</b></div>
+        <div class="lms-step"><span>4️⃣</span> Prueba la conexión abajo</div>
+      </div>
+      <div class="lms-field-label">Puerto del servidor</div>
+      <input class="lms-input" id="lms-port-input" value="1234" placeholder="1234">
+      <button id="lms-test-btn" onclick="testLMSConnection()">🔌 Probar conexión</button>
+    </div>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost btn-sm" onclick="closeLMSModal()">Cancelar</button>
+      <button class="btn btn-b" onclick="saveLMSSettings()">Guardar →</button>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+// ═══════════ CORE AUDIO STATE ═══════════
+let audioCtx=null,analyser=null,micStream=null,mediaRec=null,recChunks=[];
+let recognition=null,recogActive=false;
+let activeCanvas=null,wvRAF=null;
+let phaseTimer=null,drillIv=null;
+const micGranted={val:false};
+let lastTranscript='',lastQuestion='',lastQType='',improvedText='';
+
+function getAC(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+
+// ─── MIC SETUP ───
+async function askMic(){
+  try{
+    micStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    micGranted.val=true;
+    setupAnalyser();
+    document.querySelectorAll('.mic-btn').forEach(b=>b.classList.remove('disabled'));
+    document.querySelectorAll('[id^="mic-banner"]').forEach(b=>b.style.display='none');
+  }catch(e){alert('Microphone access denied. Recording will be unavailable.');}
+}
+function setupAnalyser(){
+  const ac=getAC();
+  analyser=ac.createAnalyser();
+  analyser.fftSize=128;
+  const src=ac.createMediaStreamSource(micStream);
+  src.connect(analyser);
+}
+// Auto-request mic on first screen load
+document.querySelectorAll('.screen').forEach(s=>{
+  const obs=new MutationObserver(()=>{if(s.classList.contains('active')&&!micGranted.val)showMicBanner(s.id)});
+  obs.observe(s,{attributes:true,attributeFilter:['class']});
+});
+function showMicBanner(sid){
+  // Show yellow banner inside the active screen
+  const b=document.getElementById('mic-banner-photo');
+  if(b&&sid==='screen-photo')b.style.display='flex';
+}
+
+// ─── WAVEFORM ───
+function startWaveform(canvasId){
+  stopWaveform();
+  activeCanvas=document.getElementById(canvasId);
+  if(!activeCanvas||!analyser)return;
+  const ctx=activeCanvas.getContext('2d');
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    wvRAF=requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(buf);
+    const w=activeCanvas.width,h=activeCanvas.height;
+    ctx.clearRect(0,0,w,h);
+    const bw=Math.floor(w/buf.length*2.5);
+    buf.forEach((v,i)=>{
+      const bh=Math.max(4,(v/255)*h);
+      const hue=120+(v/255)*60;
+      ctx.fillStyle=`hsl(${hue},90%,45%)`;
+      ctx.beginPath();
+      ctx.roundRect(i*(bw+2),(h-bh)/2,bw,bh,2);
+      ctx.fill();
+    });
+  }
+  draw();
+}
+function stopWaveform(){
+  if(wvRAF){cancelAnimationFrame(wvRAF);wvRAF=null;}
+  if(activeCanvas){const c=activeCanvas.getContext('2d');c.clearRect(0,0,activeCanvas.width,activeCanvas.height);}
+}
+
+// ─── RECORDING ───
+function startRec(audioElId,sizeElId){
+  if(!micStream||!micGranted.val){askMic();return false;}
+  recChunks=[];
+  mediaRec=new MediaRecorder(micStream);
+  mediaRec.ondataavailable=e=>recChunks.push(e.data);
+  mediaRec.onstop=()=>{
+    const blob=new Blob(recChunks,{type:'audio/webm'});
+    const url=URL.createObjectURL(blob);
+    const el=document.getElementById(audioElId);
+    if(el)el.src=url;
+    if(sizeElId){const kb=(blob.size/1024).toFixed(1);document.getElementById(sizeElId).textContent=kb+' KB';}
+  };
+  mediaRec.start();
+  startRecognition();
+  return true;
+}
+function stopRec(){
+  if(mediaRec&&mediaRec.state!=='inactive')mediaRec.stop();
+  stopRecognition();
+}
+function playBack(audioId){
+  const el=document.getElementById(audioId);
+  if(el&&el.src){el.play();}
+}
+
+// ─── SPEECH RECOGNITION ───
+function setupRecognition(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return;
+  recognition=new SR();
+  recognition.continuous=true;recognition.interimResults=true;recognition.lang='en-US';
+}
+function startRecognition(){
+  if(!recognition)setupRecognition();
+  if(!recognition)return;
+  recognition.transcript_final='';
+  recognition.onresult=e=>{
+    let fin='',intr='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)fin+=e.results[i][0].transcript;
+      else intr+=e.results[i][0].transcript;
+    }
+    recognition.transcript_final=(recognition.transcript_final||'')+fin;
+    const box=document.querySelector('.transcript-box.active');
+    if(box)box.innerHTML=recognition.transcript_final+'<span class="interim"> '+intr+'</span>';
+  };
+  try{recognition.start();recogActive=true;}catch(e){}
+}
+function stopRecognition(){
+  if(recognition&&recogActive){try{recognition.stop();}catch(e){}recogActive=false;}
+}
+
+// ─── TTS ───
+let ttsActive=false;
+function speak(text,onEnd){
+  if(!window.speechSynthesis)return onEnd&&onEnd();
+  speechSynthesis.cancel();
+  ttsActive=true;
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US';utt.rate=0.88;utt.pitch=1.05;utt.volume=1;
+  const voices=speechSynthesis.getVoices();
+  const v=voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Samantha')||v.name.includes('Karen')||v.name.includes('Moira')))||
+           voices.find(v=>v.lang.startsWith('en-US'))||voices.find(v=>v.lang.startsWith('en'));
+  if(v)utt.voice=v;
+  utt.onend=()=>{ttsActive=false;onEnd&&onEnd();};
+  utt.onerror=()=>{ttsActive=false;onEnd&&onEnd();};
+  speechSynthesis.speak(utt);
+}
+function stopSpeak(){speechSynthesis.cancel();ttsActive=false;}
+// Ensure voices load
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+
+// ─── BEEPS ───
+function beep(f,d,v=0.2){
+  try{const ac=getAC(),o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);o.frequency.value=f;
+    g.gain.setValueAtTime(v,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);
+    o.start();o.stop(ac.currentTime+d);}catch(e){}
+}
+function beepPhase(){beep(660,.14);setTimeout(()=>beep(880,.14),180);}
+function beepWarn(){beep(440,.07);}
+function beepDone(){beep(880,.12);setTimeout(()=>beep(660,.12),160);setTimeout(()=>beep(440,.22),320);}
+
+// ─── TOPBAR ───
+function setTB(phase,txt){
+  const ph=document.getElementById('tb-phase'),tm=document.getElementById('tb-timer');
+  if(!phase){ph.style.display='none';tm.style.display='none';return;}
+  ph.style.display='block';tm.style.display='block';
+  ph.className='';ph.classList.add(phase);
+  const labels={prep:'PREPARATION',rec:'RECORDING',warn:'⚠ TIME'};
+  ph.textContent=labels[phase]||phase.toUpperCase();
+  tm.textContent=txt;
+}
+
+// ─── PHASE BANNER ───
+function setBanner(id,phase,icon,text,num){
+  const b=document.getElementById(id);if(!b)return;
+  b.className='phase-banner '+phase;
+  document.getElementById(id.replace('banner','banner-icon')).textContent=icon;
+  document.getElementById(id.replace('banner','banner-text')).textContent=text;
+  document.getElementById(id.replace('banner','banner-num')).textContent=num;
+}
+
+// ─── PROGRESS BAR ───
+function setBar(id,left,total,phase){
+  const b=document.getElementById(id);if(!b)return;
+  b.style.width=Math.max(0,(left/total)*100)+'%';
+  b.className='bar-fill '+(phase||'');
+}
+
+// ─── NAV ───
+function goTo(mod){
+  document.getElementById('screen-home').style.display='none';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const s=document.getElementById('screen-'+mod);if(s)s.classList.add('active');
+  window.scrollTo(0,0);
+  clearAllTimers();hidePrepOverlay();
+  if(!micGranted.val)askMic();
+  if(mod==='photo')newPhoto();
+  if(mod==='read')newReadQ();
+  if(mod==='sample')newSampleQ();
+  if(mod==='interactive')newISSet();
+  if(mod==='drill'){
+    drillType='photo';drillIdx=0;drillResults=[];drillSessionXP=0;
+    clearInterval(drillIv);drillIv=null;
+    document.querySelectorAll('#drill-type-tabs .tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+    document.getElementById('drill-complete-wrap').style.display='none';
+    document.getElementById('drill-card-wrap').style.display='block';
+    renderDrillCard();renderDrillDots();updateDrillXPLabel();
+  }
+}
+function goHome(){
+  clearAllTimers();stopSpeak();stopRec();stopWaveform();setTB(null,'');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-home').style.display='block';
+  window.scrollTo(0,0);
+}
+function toggleHint(id){
+  const h=document.getElementById(id);h.classList.toggle('open');
+  const btn=h.previousElementSibling.querySelector('.hint-toggle')||document.querySelector('.hint-toggle');
+  // find button in parent card
+  h.previousElementSibling&&h.previousElementSibling.querySelector&&
+    (h.previousElementSibling.querySelector('.hint-toggle')||{}).textContent &&
+    (h.previousElementSibling.querySelector('.hint-toggle').textContent=h.classList.contains('open')?'🙈 Hide':'👁 Show Hints');
+}
+function toggleTpl(hdr){hdr.classList.toggle('open');hdr.nextElementSibling.classList.toggle('open');}
+function copyQ(tid,bid){
+  const t=document.getElementById(tid).textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    const b=document.getElementById(bid);b.textContent='✅ Copied';b.classList.add('ok');
+    setTimeout(()=>{b.textContent='📋 Copy';b.classList.remove('ok');},2000);
+  }).catch(()=>{});
+}
+function clearAllTimers(){
+  [phIv,rdIv,spIv,isIv,drillIv].forEach(t=>clearInterval(t));
+  phIv=rdIv=spIv=isIv=drillIv=null;
+  document.querySelectorAll('.transcript-box').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.playback-row').forEach(r=>r.classList.remove('show'));
+}
+
+// ─── KEYBOARD ───
+document.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
+  const s=document.querySelector('.screen.active');if(!s)return;
+  const id=s.id;
+  if(e.code==='Space'){e.preventDefault();
+    if(id==='screen-photo')startPhotoTimer();
+    else if(id==='screen-read')startReadTimer();
+    else if(id==='screen-sample')startSampleTimer();
+    else if(id==='screen-interactive'){
+      const nb=document.getElementById('is-next');
+      if(nb.style.display!=='none')nb.click();else startISTimer();
+    }
+  }
+  if(e.code==='KeyR'){
+    if(id==='screen-photo')resetPhoto();
+    else if(id==='screen-read')resetRead();
+    else if(id==='screen-sample')resetSample();
+  }
+  if(e.code==='KeyN'){
+    if(id==='screen-photo')newPhoto();
+    else if(id==='screen-read')newReadQ();
+    else if(id==='screen-sample')newSampleQ();
+    else if(id==='screen-interactive')newISSet();
+  }
+  if(e.code==='KeyD'){
+    if(id==='screen-photo')finishEarly('photo');
+    else if(id==='screen-read')finishEarly('read');
+    else if(id==='screen-sample')finishEarly('sample');
+    else if(id==='screen-interactive')finishEarly('interactive');
+  }
+});
+
+// ════════════ PHOTO MODULE ════════════
+const PHOTOS=[
+  {img:"images/photo_01.jpg",title:"Mechanic repairing a motorcycle",hint:"Focus on: mechanic's gear and tools, rural roadside setting, overcast sky, what might have caused the breakdown, the mechanic's concentration."},
+  {img:"images/photo_02.jpg",title:"Beach cleanup initiative",hint:"Focus on: volunteers' ages and diversity, gloves and bags, amount of trash, clear blue sky and ocean behind them, community spirit."},
+  {img:"images/photo_03.jpg",title:"Chefs preparing gourmet dishes",hint:"Focus on: white uniforms, careful plating, stainless steel kitchen, collaboration between the two chefs, bright professional lighting."},
+  {img:"images/photo_04.jpg",title:"Children learning to cook",hint:"Focus on: adult-child relationship, aprons, ingredients on counter (flour, eggs), children's excitement, the home kitchen setting."},
+  {img:"images/photo_05.jpg",title:"Competitive cyclists racing",hint:"Focus on: colorful racing gear, lightweight bikes, mountain scenery, crowd cheering on the roadside, the effort and speed."},
+  {img:"images/photo_06.jpg",title:"Firefighter battling a wildfire",hint:"Focus on: full protective gear, water spray, dense orange flames and smoke, forest setting, the danger and bravery of the work."},
+  {img:"images/photo_07.jpg",title:"Museum — exploring ancient artifacts",hint:"Focus on: display case with pottery and jewelry, dim focused lighting, visitor leaning in to read a label, the historical period suggested."},
+  {img:"images/photo_08.jpg",title:"Holi festival celebration",hint:"Focus on: brightly colored powders, joyful crowd, faces and clothes covered in pink/yellow/blue, outdoor festive energy, cultural significance."},
+  {img:"images/photo_09.jpg",title:"Hot air balloons at sunrise",hint:"Focus on: variety of balloon colors, orange-pink sky, green landscape below, sense of freedom and adventure, peaceful atmosphere."},
+  {img:"images/photo_10.jpg",title:"Laboratory research with a microscope",hint:"Focus on: white lab coat and safety glasses, organized bench with test tubes, the scientist's concentration, importance of scientific research."},
+  {img:"images/photo_11.jpg",title:"Lantern festival night scene",hint:"Focus on: hundreds of glowing lanterns against dark sky, crowd releasing them, reflection in water, peaceful and symbolic atmosphere."},
+  {img:"images/photo_12.jpg",title:"People playing chess outdoors",hint:"Focus on: two elderly men, stone table in a park, concentrated expressions, crowd of onlookers, chess as a mental sport."},
+  {img:"images/photo_13.jpg",title:"River rafting adventure",hint:"Focus on: helmets and life jackets, white-water rapids, everyone's focused expressions, rocky cliffs, balance of thrill and danger."},
+  {img:"images/photo_14.jpg",title:"Robotics exhibition display",hint:"Focus on: student's pride, the robot on a white table, judges and parents watching, science fair setting, value of STEM education."},
+  {img:"images/photo_15.jpg",title:"Surfer riding a powerful wave",hint:"Focus on: the surfer's balance and posture (crouching, arms out), wave size and color, clear sky, athleticism meets nature."},
+  {img:"images/photo_16.jpg",title:"Solar panel installation on roof",hint:"Focus on: safety harnesses, large panels, suburban neighborhood, clear sky maximizing solar energy, renewable energy themes."},
+  {img:"images/photo_17.jpg",title:"Pottery making in a studio",hint:"Focus on: hands shaping clay on the wheel, apron covered in clay, shelves of finished ceramics, meditative and artistic quality."},
+  {img:"images/photo_18.jpg",title:"Graffiti art creation",hint:"Focus on: protective mask, scale of the mural, bold colors and abstract shapes, urban wall, street art as legitimate art form."},
+  {img:"images/photo_19.jpg",title:"Wildlife photographer with a squirrel",hint:"Focus on: photographer crouching close to the squirrel, lush green forest background, patience required, human-nature connection."},
+  {img:"images/photo_20.jpg",title:"Ice hockey match in action",hint:"Focus on: two players competing for the puck, team jersey colors, fresh ice surface, spectators behind boards, speed and physicality."},
+  {img:"images/photo_21.jpg",title:"Drone delivery in a city",hint:"Focus on: drone hovering with package, modern urban skyline, pedestrians looking up curiously, future of urban logistics."},
+  {img:"images/photo_22.jpg",title:"Scuba diver exploring coral reef",hint:"Focus on: wetsuit and equipment, vibrant coral colors, tropical fish, underwater lighting, ocean conservation themes."},
+  {img:"images/photo_23.jpg",title:"Street decorated with colorful umbrellas",hint:"Focus on: hundreds of umbrellas creating a canopy, pedestrians below, small shops lining the street, festive public art installation."},
+  {img:"images/photo_24.jpg",title:"Kite flying at the beach",hint:"Focus on: father-child bond, large red-yellow kite against blue sky, ocean waves behind, both smiling, family outdoor activity."},
+  {img:"images/photo_25.jpg",title:"Group meditating on a hilltop",hint:"Focus on: circle of meditators, closed eyes, hilltop at sunrise, misty valley below, mindfulness and wellness themes."},
+];
+
+let phIv=null,phPhase='idle',phLeft=20,phCount=0,phRecording=false;
+
+function newPhoto(){
+  clearInterval(phIv);phIv=null;stopRec();stopWaveform();stopSpeak();
+  phPhase='idle';phRecording=false;
+  const p=PHOTOS[Math.floor(Math.random()*PHOTOS.length)];
+  const img=document.getElementById('ph-img'),ph=document.getElementById('ph-placeholder');
+  img.style.opacity='0';ph.style.display='flex';
+  img.src=p.img;
+  document.getElementById('ph-title').textContent=p.title;
+  document.getElementById('ph-sub').textContent='Vocabulary guide available → click Show Hints';
+  document.getElementById('ph-hint-text').textContent=p.hint;
+  document.getElementById('ph-hint').classList.remove('open');
+  document.getElementById('ph-transcript').classList.remove('active');
+  document.getElementById('ph-playback').classList.remove('show');
+  document.getElementById('ph-mic').className='mic-btn';
+  document.getElementById('ph-pulse').classList.remove('active');
+  document.getElementById('ph-rec-size').textContent='';
+  setBanner('ph-banner','idle','⏸','Ready — press Start','—');
+  setBar('ph-bar',1,1,'');
+  resetPhotoTimer();
+}
+function resetPhoto(){
+  clearInterval(phIv);phIv=null;stopRec();stopWaveform();stopSpeak();
+  phPhase='idle';phRecording=false;phLeft=20;
+  document.getElementById('ph-mic').className='mic-btn prep';
+  document.getElementById('ph-pulse').classList.remove('active');
+  setBanner('ph-banner','idle','⏸','Ready — press Start','20s');
+  setBar('ph-bar',1,1,'prep');setTB(null,'');
+}
+function togglePhotoRec(){
+  if(phPhase!=='speaking')return;
+  if(phRecording){stopRec();stopWaveform();phRecording=false;
+    document.getElementById('ph-mic').className='mic-btn';
+    document.getElementById('ph-pulse').classList.remove('active');
+    document.getElementById('ph-playback').classList.add('show');
+  }else{
+    if(startRec('ph-audio','ph-rec-size')){phRecording=true;
+      document.getElementById('ph-mic').className='mic-btn rec';
+      document.getElementById('ph-pulse').classList.add('active');
+      startWaveform('wv-photo');
+      const tb=document.getElementById('ph-transcript');tb.classList.add('active');tb.textContent='';
+    }
+  }
+}
+function showDoneBtn(mod,show){
+  const id={photo:'ph-done',read:'rd-done',sample:'sp-done',interactive:'is-done'}[mod];
+  const el=document.getElementById(id);if(el)el.style.display=show?'':'none';
+}
+
+function finishEarly(mod){
+  if(mod==='photo'){
+    if(phPhase!=='speaking')return;
+    clearInterval(phIv);phIv=null;
+    if(phRecording)togglePhotoRec();
+    showDoneBtn('photo',false);
+    phCount++;document.getElementById('ph-count').textContent=phCount;
+    setBanner('ph-banner','idle','✅','Done! Good job.','—');
+    setBar('ph-bar',0,1,'');setTB(null,'');
+    addXP(10);
+    const txt=document.getElementById('ph-transcript').textContent;
+    lastTranscript=txt;lastQuestion=document.getElementById('ph-title').textContent;lastQType='Speak About the Photo';
+    setTimeout(()=>showScore(analyzeTranscript(txt,90)),500);
+  } else if(mod==='read'){
+    if(rdPhase!=='speaking')return;
+    clearInterval(rdIv);rdIv=null;
+    if(rdRecording)toggleReadRec();
+    showDoneBtn('read',false);
+    rdCount++;document.getElementById('rd-count').textContent=rdCount;
+    setBanner('rd-banner','idle','✅','Done! Good job.','—');
+    setBar('rd-bar',0,1,'');setTB(null,'');
+    addXP(10);
+    const txt=document.getElementById('rd-transcript').textContent;
+    lastTranscript=txt;lastQuestion=document.getElementById('rd-q').textContent;lastQType='Read Then Speak';
+    setTimeout(()=>showScore(analyzeTranscript(txt,90)),500);
+  } else if(mod==='sample'){
+    if(spPhase!=='speaking')return;
+    clearInterval(spIv);spIv=null;
+    if(spRecording)toggleSampleRec();
+    showDoneBtn('sample',false);
+    setBanner('sp-banner','idle','✅','Done! Well done.','—');
+    setBar('sp-bar',0,1,'');setTB(null,'');
+    addXP(15);
+    const txt=document.getElementById('sp-transcript').textContent;
+    lastTranscript=txt;lastQuestion=document.getElementById('sp-q').textContent;lastQType='Speaking Sample';
+    setTimeout(()=>showScore(analyzeTranscript(txt,180)),500);
+  } else if(mod==='interactive'){
+    if(isPhase!=='speaking')return;
+    clearInterval(isIv);isIv=null;
+    const _isTxt=document.getElementById('is-transcript').textContent;
+    if(isRec){stopRec();stopWaveform();isRec=false;
+      document.getElementById('is-mic').className='mic-btn disabled';
+      document.getElementById('is-pulse').classList.remove('active');
+      document.getElementById('is-playback').classList.add('show');
+    }
+    showDoneBtn('interactive',false);
+    const isLast=curQ>=curSet.qs.length-1;
+    lastTranscript=_isTxt;lastQuestion=curSet.qs[curQ].q;lastQType='Interactive Speaking';
+    addXP(5);hidePrepOverlay();
+    if(isLast){
+      setBanner('is-banner','idle','🏁','Set complete!','—');
+      setBar('is-bar',0,1,'');setTB(null,'');
+      setTimeout(()=>showScore(analyzeTranscript(_isTxt,35),newISSet,'🔀 Nuevo Set'),500);
+    }else{
+      setBanner('is-banner','idle','✅','Respuesta guardada ✓','—');
+      setBar('is-bar',0,1,'');setTB(null,'');
+      setTimeout(()=>showScore(analyzeTranscript(_isTxt,35),nextISQ,'Siguiente Pregunta →'),500);
+    }
+  }
+}
+
+function startPhotoTimer(){
+  if(phIv)return;
+  phPhase='prep';phLeft=20;
+  setBanner('ph-banner','prep','⏳','PREPARATION TIME','0:20');
+  setBar('ph-bar',20,20,'prep');setTB('prep','0:20');
+  document.getElementById('ph-mic').className='mic-btn prep';
+  showPrepOverlay('photo');
+  phIv=setInterval(()=>{
+    phLeft--;
+    if(phLeft<=0&&phPhase==='prep'){
+      beepPhase();phPhase='speaking';phLeft=90;
+      setBanner('ph-banner','rec','🎙','RESPONSE TIME — Speak now!','1:30');
+      setBar('ph-bar',90,90,'rec');setTB('rec','1:30');
+      document.getElementById('ph-mic').className='mic-btn';
+      hidePrepOverlay();showDoneBtn('photo',true);
+      // auto-start recording
+      if(micGranted.val&&!phRecording){togglePhotoRec();}
+      return;
+    }else if(phLeft<=0&&phPhase==='speaking'){
+      beepDone();clearInterval(phIv);phIv=null;
+      if(phRecording)togglePhotoRec();
+      showDoneBtn('photo',false);
+      phCount++;document.getElementById('ph-count').textContent=phCount;
+      setBanner('ph-banner','idle','✅','Time\'s up! Great job.','—');
+      setBar('ph-bar',0,1,'');setTB(null,'');
+      addXP(10);
+      const _phTxt=document.getElementById('ph-transcript').textContent;
+      lastTranscript=_phTxt;lastQuestion=document.getElementById('ph-title').textContent;lastQType='Speak About the Photo';
+      setTimeout(()=>showScore(analyzeTranscript(_phTxt,90)),700);
+      return;
+    }
+    if(phPhase==='speaking'&&phLeft<=15){
+      setBanner('ph-banner','warn','⚠','RESPONSE TIME — Hurry!',phLeft+'s');
+      setBar('ph-bar',phLeft,90,'warn');setTB('warn',phLeft+'s');
+      if(phLeft<=10)beepWarn();
+    }else if(phPhase==='speaking'){
+      const m=Math.floor(phLeft/60),s=phLeft%60;
+      const ts=m+':'+(s<10?'0':'')+s;
+      setBanner('ph-banner','rec','🎙','RESPONSE TIME — Speak now!',ts);
+      setBar('ph-bar',phLeft,90,'rec');setTB('rec',ts);
+    }else{
+      setBanner('ph-banner','prep','⏳','PREPARATION TIME','0:'+phLeft.toString().padStart(2,'0'));
+      setBar('ph-bar',phLeft,20,'prep');setTB('prep','0:'+phLeft.toString().padStart(2,'0'));
+    }
+  },1000);
+}
+
+// ════════════ READ THEN SPEAK ════════════
+const READ_QS=[
+  "Describe a memorable vacation or trip you have taken. What made it special, and would you recommend it to others?",
+  "Talk about a person who has had a significant influence on your life. Who are they and in what ways have they shaped who you are?",
+  "Describe a challenge you overcame. What strategies did you use and what did you learn from that experience?",
+  "Talk about a time when you helped someone in need. What happened, and how did it make you feel?",
+  "Describe a skill you wish you had learned earlier. Why is it important and how would it have helped you?",
+  "Talk about a gift you gave or received that was particularly meaningful. Why was it so special?",
+  "Describe a time you had to make a very difficult decision. What were your options and are you happy with the result?",
+  "Talk about a hobby you enjoy. How did you get into it and what does it bring to your life?",
+  "Describe a cultural tradition from your country that is meaningful to you personally.",
+  "Talk about a book, film, or work of art that changed the way you see the world.",
+  "Describe a memorable meal you shared with someone. Who was there and what made it unforgettable?",
+  "Talk about a time you learned something new that was very difficult at first. What kept you motivated?",
+  "Describe a moment from your childhood that you still remember vividly. Why do you think it stayed with you?",
+  "Talk about a teacher or mentor who had a lasting positive impact on you.",
+  "Describe a time you had to work as part of a team. What role did you play and what challenges did the group face?",
+  "Talk about a fear you have overcome. What did overcoming it teach you?",
+  "Explain the benefits of learning a second language. How can it affect someone's personal and professional life?",
+  "Discuss the role of technology in modern education. Has it been more helpful or harmful?",
+  "Explain how social media affects relationships between people today.",
+  "Do you think young people today face more pressure than previous generations? Support your view.",
+  "Explain what qualities make a great leader. Can those qualities be learned?",
+  "Do you think artificial intelligence will change the job market for better or worse?",
+  "Should social media platforms be responsible for the content users post?",
+  "Do you think it is better for children to grow up in a city or a small town?",
+  "Explain how globalization has changed the world. Is it mainly positive or negative?",
+  "Do you think governments should invest more in space exploration or solving problems on Earth?",
+  "Is it more important to follow your passion in a career or to choose a career that pays well?",
+  "Do you believe people are becoming more or less kind to one another? Give reasons.",
+  "Should university education be free for all students?",
+  "Do you think animals should be used in scientific research?",
+  "Describe an environmental issue that concerns you. What should individuals and governments do?",
+  "Talk about how technology has changed communication compared to 20 years ago.",
+  "Explain the advantages and disadvantages of working from home versus an office.",
+  "Discuss how social media has changed the way people get news. Is this positive?",
+  "Explain how smartphones have changed daily life — positive and negative effects.",
+  "Describe a significant invention from the past 50 years and why it matters.",
+  "Talk about renewable energy sources. Why are they important and what challenges do they face?",
+  "Explain digital privacy. Do you think people are aware enough of how their data is used?",
+  "Discuss the impact of fast fashion on the environment. What can individuals do?",
+  "Compare doing homework alone versus in a group. Which is more effective?",
+  "Compare living in a city versus a small town. What are the main advantages of each?",
+  "Compare studying online versus in a traditional classroom.",
+  "Compare traveling alone versus with friends or family.",
+  "If you could live in any time period in history, which would you choose and why?",
+  "If you could have any job in the world for one year, what would you choose?",
+  "If you had the ability to change one thing about your country, what would it be?",
+  "Compare rural and urban lifestyles. What are key differences in opportunities?",
+  "Compare traditional shopping versus online shopping.",
+  "If you could study or work in any country for one year, where would you go?",
+  "Describe your ideal work environment. What conditions help you be most productive?",
+  "Talk about a goal you want to achieve in the next five years. What steps are you taking?",
+  "Describe a city or country you would love to visit. What specifically attracts you?",
+  "Explain the role of family in your culture. How has your view of it changed over time?",
+  "Describe your ideal free weekend. What activities would you choose and why?",
+  "Talk about the role of music in your life. How does it affect your mood?",
+  "Describe what success means to you personally.",
+  "Talk about the importance of volunteering. Have you ever volunteered? What did you learn?",
+  "Describe a moment in history you find significant. Why does it matter today?",
+  "Talk about the role of sports in society. Should governments promote them more?",
+  "Explain how the internet has changed the way people learn new skills.",
+  "Explain how friendships change as people grow older.",
+  "Describe what makes a neighborhood a good place to live.",
+  "Explain the concept of work-life balance. Do most people achieve it?",
+  "Describe the most beautiful place you have ever visited.",
+  "Talk about a habit — good or bad — you have tried to change.",
+  "Explain what you think will be the most important job of the future.",
+  "Describe a piece of advice someone gave you that turned out to be very valuable.",
+  "Talk about the biggest challenge facing young people in your country right now.",
+  "Explain how your hometown has changed in the past ten years.",
+  "Talk about the advantages and disadvantages of having a pet.",
+  "Explain how travel can change a person's perspective on life.",
+  "Describe what you think makes a happy and fulfilling life.",
+  "Talk about a person you admire who you have never met — historical or public figure.",
+  "Explain how the way people shop for food has changed. Is it healthier for society?",
+  "Describe a time when you failed at something important. What did you learn?",
+  "Talk about the importance of creativity in education. Do schools foster it enough?",
+  "Describe what you think the world will look like in 50 years.",
+  "Talk about a tradition from your culture you want to preserve for future generations.",
+  "Explain why reading is important even in the age of videos and social media.",
+  "Describe how you handle stress. What strategies work best for you?",
+];
+
+let rdIv=null,rdPhase='idle',rdLeft=20,rdCount=0,rdRecording=false;
+
+function newReadQ(){
+  clearInterval(rdIv);rdIv=null;stopRec();stopWaveform();stopSpeak();
+  rdPhase='idle';rdRecording=false;rdLeft=20;
+  const q=READ_QS[Math.floor(Math.random()*READ_QS.length)];
+  document.getElementById('rd-q').textContent=q;
+  document.getElementById('rd-transcript').classList.remove('active');
+  document.getElementById('rd-playback').classList.remove('show');
+  document.getElementById('rd-mic').className='mic-btn disabled';
+  document.getElementById('rd-pulse').classList.remove('active');
+  document.getElementById('rd-rec-size').textContent='';
+  setBanner('rd-banner','idle','⏸','Ready — press Start','—');
+  setBar('rd-bar',1,1,'');setTB(null,'');
+  // TTS reads the question
+  const ttsEl=document.getElementById('rd-tts-bar');
+  const ttsLabel=document.getElementById('rd-tts-label');
+  const ttsDots=document.getElementById('rd-tts-dots');
+  ttsEl.style.display='flex';
+  if(ttsLabel)ttsLabel.classList.add('show');
+  if(ttsDots)ttsDots.classList.add('show');
+  speak(q,()=>{ttsEl.style.display='none';});
+}
+function resetRead(){
+  clearInterval(rdIv);rdIv=null;stopRec();stopWaveform();stopSpeak();
+  rdPhase='idle';rdRecording=false;rdLeft=20;
+  document.getElementById('rd-mic').className='mic-btn disabled';
+  document.getElementById('rd-pulse').classList.remove('active');
+  setBanner('rd-banner','idle','⏸','Ready','—');
+  setBar('rd-bar',1,1,'');setTB(null,'');
+}
+function toggleReadRec(){
+  if(rdPhase!=='speaking')return;
+  if(rdRecording){stopRec();stopWaveform();rdRecording=false;
+    document.getElementById('rd-mic').className='mic-btn';
+    document.getElementById('rd-pulse').classList.remove('active');
+    document.getElementById('rd-playback').classList.add('show');
+  }else{
+    if(startRec('rd-audio','rd-rec-size')){rdRecording=true;
+      document.getElementById('rd-mic').className='mic-btn rec';
+      document.getElementById('rd-pulse').classList.add('active');
+      startWaveform('wv-read');
+      const tb=document.getElementById('rd-transcript');tb.classList.add('active');tb.textContent='';
+    }
+  }
+}
+function startReadTimer(){
+  if(rdIv)return;
+  rdPhase='prep';rdLeft=20;stopSpeak();
+  setBanner('rd-banner','prep','⏳','PREPARATION TIME','0:20');
+  setBar('rd-bar',20,20,'prep');setTB('prep','0:20');
+  document.getElementById('rd-tts-bar').style.display='none';
+  showPrepOverlay('read');
+  rdIv=setInterval(()=>{
+    rdLeft--;
+    if(rdLeft<=0&&rdPhase==='prep'){
+      beepPhase();rdPhase='speaking';rdLeft=90;
+      setBanner('rd-banner','rec','🎙','RESPONSE TIME — Speak now!','1:30');
+      setBar('rd-bar',90,90,'rec');setTB('rec','1:30');
+      document.getElementById('rd-mic').className='mic-btn';
+      hidePrepOverlay();showDoneBtn('read',true);
+      if(micGranted.val)toggleReadRec();
+      return;
+    }else if(rdLeft<=0&&rdPhase==='speaking'){
+      beepDone();clearInterval(rdIv);rdIv=null;
+      if(rdRecording)toggleReadRec();
+      showDoneBtn('read',false);
+      rdCount++;document.getElementById('rd-count').textContent=rdCount;
+      setBanner('rd-banner','idle','✅','Done! Great response.','—');
+      setBar('rd-bar',0,1,'');setTB(null,'');
+      addXP(10);
+      const _rdTxt=document.getElementById('rd-transcript').textContent;
+      lastTranscript=_rdTxt;lastQuestion=document.getElementById('rd-q').textContent;lastQType='Read Then Speak';
+      setTimeout(()=>showScore(analyzeTranscript(_rdTxt,90)),700);
+      return;
+    }
+    if(rdPhase==='speaking'&&rdLeft<=15){
+      setBanner('rd-banner','warn','⚠','Wrap up!',rdLeft+'s');
+      setBar('rd-bar',rdLeft,90,'warn');setTB('warn',rdLeft+'s');
+      if(rdLeft<=10)beepWarn();
+    }else if(rdPhase==='speaking'){
+      const m=Math.floor(rdLeft/60),s=rdLeft%60;const ts=m+':'+(s<10?'0':'')+s;
+      setBanner('rd-banner','rec','🎙','RESPONSE TIME',ts);
+      setBar('rd-bar',rdLeft,90,'rec');setTB('rec',ts);
+    }else{
+      setBanner('rd-banner','prep','⏳','PREPARATION TIME','0:'+rdLeft.toString().padStart(2,'0'));
+      setBar('rd-bar',rdLeft,20,'prep');setTB('prep','0:'+rdLeft.toString().padStart(2,'0'));
+    }
+  },1000);
+}
+
+// ════════════ SPEAKING SAMPLE ════════════
+const SAMPLE_QS=[
+  {type:'experience',label:'Experience',text:"Describe a time you had a meal with someone in their own home. Whose house? What did they cook? Did you enjoy it?"},
+  {type:'experience',label:'Experience',text:"Talk about a gift you gave to a loved one. What was it? Who did you give it to? Why that gift?"},
+  {type:'experience',label:'Experience',text:"Describe a time you learned something new that was very difficult at first. What motivated you to continue?"},
+  {type:'experience',label:'Experience',text:"Describe a memorable trip. Where? Who were you with? What made it special?"},
+  {type:'experience',label:'Experience',text:"Describe a time you faced a difficult decision. What were your options and are you happy with the result?"},
+  {type:'experience',label:'Experience',text:"Talk about a person who changed your life. How did you meet them and what did they do?"},
+  {type:'experience',label:'Experience',text:"Describe a moment when something didn't go as planned. How did you handle it?"},
+  {type:'experience',label:'Experience',text:"Talk about a moment you felt very proud of yourself. What had you accomplished?"},
+  {type:'experience',label:'Experience',text:"Describe a job or volunteer experience. What did you do and what skills did you develop?"},
+  {type:'experience',label:'Experience',text:"Talk about a time you had a disagreement with someone close. How was it resolved?"},
+  {type:'experience',label:'Experience',text:"Describe the last time you tried something completely new. What surprised you?"},
+  {type:'experience',label:'Experience',text:"Talk about a time you helped a stranger. What happened and how did it affect you?"},
+  {type:'describe',label:'Describe',text:"Talk about a custom or tradition from your country. What is it? Who participates? Should others learn about it?"},
+  {type:'describe',label:'Describe',text:"Describe a typical day in your life. How do you manage time and responsibilities?"},
+  {type:'describe',label:'Describe',text:"Describe a hobby you enjoy. How did you discover it? What does it bring you?"},
+  {type:'describe',label:'Describe',text:"Talk about a person in your life who inspired you. Who are they and how have they influenced you?"},
+  {type:'describe',label:'Describe',text:"Talk about a book, movie, or series that had a significant impact on you. How did it change your thinking?"},
+  {type:'describe',label:'Describe',text:"Describe a restaurant or café you love. Food, atmosphere, why you keep going back?"},
+  {type:'describe',label:'Describe',text:"Describe what makes your hometown unique. What would you show a visitor?"},
+  {type:'describe',label:'Describe',text:"Talk about an important person from your country's history. Why are they significant today?"},
+  {type:'describe',label:'Describe',text:"Describe your ideal living situation — home, neighborhood, community."},
+  {type:'describe',label:'Describe',text:"Talk about a piece of technology you could not live without. How do you use it?"},
+  {type:'describe',label:'Describe',text:"Describe a public space you love — park, square, market, or library. What makes it special?"},
+  {type:'describe',label:'Describe',text:"Talk about a sport or physical activity you find exciting. What appeals to you about it?"},
+  {type:'compare',label:'Compare',text:"Compare doing homework alone versus in a group. Which is more effective?"},
+  {type:'compare',label:'Compare',text:"Compare living in a large city versus a small town. Main advantages of each?"},
+  {type:'compare',label:'Compare',text:"Compare studying online versus in a traditional classroom."},
+  {type:'compare',label:'Compare',text:"Compare traveling alone versus with friends or family."},
+  {type:'compare',label:'Compare',text:"Compare traditional shopping versus online shopping — which has more advantages?"},
+  {type:'compare',label:'Compare',text:"Compare how people socialized 20 years ago versus today. Are these changes positive?"},
+  {type:'compare',label:'Compare',text:"Compare living with family versus living alone. Advantages and challenges of each?"},
+  {type:'compare',label:'Compare',text:"Compare working for a large company versus a small business."},
+  {type:'compare',label:'Compare',text:"Compare a career that pays well but you dislike, versus one you love that pays less."},
+  {type:'compare',label:'Compare',text:"Compare the educational systems in two countries you know about."},
+  {type:'opinion',label:'Opinion',text:"Imagine you have to deliver bad news to your best friend. Quiet private place or public setting? Why?"},
+  {type:'opinion',label:'Opinion',text:"Should young people take a gap year before university? Support with reasons and examples."},
+  {type:'opinion',label:'Opinion',text:"Has technology made people more or less connected? Explain with examples from your life."},
+  {type:'opinion',label:'Opinion',text:"Is it better to have a job you love but pays less, or a well-paying job you dislike?"},
+  {type:'opinion',label:'Opinion',text:"Has social media had a positive or negative effect on society overall?"},
+  {type:'opinion',label:'Opinion',text:"Is it important to maintain traditions in a modern globalized world? Why or why not?"},
+  {type:'opinion',label:'Opinion',text:"Is success more about talent or hard work? Explain with examples."},
+  {type:'opinion',label:'Opinion',text:"Should children be taught about climate change and environment in schools?"},
+  {type:'opinion',label:'Opinion',text:"Should competitive sports be compulsory in schools? Benefits and risks?"},
+  {type:'opinion',label:'Opinion',text:"Do people today have too much choice? Does more options make people happier or more anxious?"},
+  {type:'opinion',label:'Opinion',text:"Are the arts — music, painting, theater — as important to society as science and technology?"},
+  {type:'opinion',label:'Opinion',text:"Should people be legally required to vote in elections? Argue for or against."},
+  {type:'opinion',label:'Opinion',text:"Do celebrities have a responsibility to be positive role models?"},
+  {type:'opinion',label:'Opinion',text:"Is it ever acceptable to lie? Describe a situation where lying might be justified."},
+  {type:'opinion',label:'Opinion',text:"Are humans naturally cooperative or competitive? Which has helped societies progress more?"},
+  {type:'opinion',label:'Opinion',text:"Should people be allowed to work from home permanently? What would be gained and lost?"},
+];
+let spIv=null,spPhase='idle',spLeft=30,spRecording=false,spFilter='all';
+
+function filterSample(type,el){
+  spFilter=type;
+  document.querySelectorAll('#sample-tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');newSampleQ();
+}
+function newSampleQ(){
+  clearInterval(spIv);spIv=null;stopRec();stopWaveform();stopSpeak();
+  spPhase='idle';spRecording=false;spLeft=30;
+  let pool=spFilter==='all'?SAMPLE_QS:SAMPLE_QS.filter(q=>q.type===spFilter);
+  if(!pool.length)pool=SAMPLE_QS;
+  const q=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('sp-q').textContent=q.text;
+  const badge=document.getElementById('sp-badge');badge.textContent=q.label;badge.className='q-badge '+q.type;
+  document.getElementById('sp-transcript').classList.remove('active');
+  document.getElementById('sp-playback').classList.remove('show');
+  document.getElementById('sp-mic').className='mic-btn disabled';
+  document.getElementById('sp-pulse').classList.remove('active');
+  setBanner('sp-banner','idle','⏸','Ready','—');
+  setBar('sp-bar',1,1,'');setTB(null,'');
+  // TTS reads question
+  const ttsEl=document.getElementById('sp-tts-bar');
+  ttsEl.style.display='flex';
+  speak(q.text,()=>{ttsEl.style.display='none';});
+}
+function resetSample(){
+  clearInterval(spIv);spIv=null;stopRec();stopWaveform();stopSpeak();
+  spPhase='idle';spRecording=false;spLeft=30;
+  document.getElementById('sp-mic').className='mic-btn disabled';
+  document.getElementById('sp-pulse').classList.remove('active');
+  setBanner('sp-banner','idle','⏸','Ready','—');
+  setBar('sp-bar',1,1,'');setTB(null,'');
+}
+function toggleSampleRec(){
+  if(spPhase!=='speaking')return;
+  if(spRecording){stopRec();stopWaveform();spRecording=false;
+    document.getElementById('sp-mic').className='mic-btn';
+    document.getElementById('sp-pulse').classList.remove('active');
+    document.getElementById('sp-playback').classList.add('show');
+  }else{
+    if(startRec('sp-audio','sp-rec-size')){spRecording=true;
+      document.getElementById('sp-mic').className='mic-btn rec';
+      document.getElementById('sp-pulse').classList.add('active');
+      startWaveform('wv-sample');
+      const tb=document.getElementById('sp-transcript');tb.classList.add('active');tb.textContent='';
+    }
+  }
+}
+function startSampleTimer(){
+  if(spIv)return;spPhase='prep';spLeft=30;stopSpeak();
+  setBanner('sp-banner','prep','⏳','PREPARATION TIME','0:30');
+  setBar('sp-bar',30,30,'prep');setTB('prep','0:30');
+  document.getElementById('sp-tts-bar').style.display='none';
+  showPrepOverlay('sample');
+  spIv=setInterval(()=>{
+    spLeft--;
+    if(spLeft<=0&&spPhase==='prep'){
+      beepPhase();spPhase='speaking';spLeft=180;
+      setBanner('sp-banner','rec','🎙','RESPONSE TIME — Speak!','3:00');
+      setBar('sp-bar',180,180,'rec');setTB('rec','3:00');
+      document.getElementById('sp-mic').className='mic-btn';
+      hidePrepOverlay();showDoneBtn('sample',true);
+      if(micGranted.val)toggleSampleRec();
+      return;
+    }else if(spLeft<=0&&spPhase==='speaking'){
+      beepDone();clearInterval(spIv);spIv=null;
+      if(spRecording)toggleSampleRec();
+      showDoneBtn('sample',false);
+      setBanner('sp-banner','idle','✅','Time\'s up! Well done.','—');
+      setBar('sp-bar',0,1,'');setTB(null,'');
+      addXP(15);
+      const _spTxt=document.getElementById('sp-transcript').textContent;
+      lastTranscript=_spTxt;lastQuestion=document.getElementById('sp-q').textContent;lastQType='Speaking Sample';
+      setTimeout(()=>showScore(analyzeTranscript(_spTxt,180)),700);
+      return;
+    }
+    if(spPhase==='speaking'&&spLeft<=20){
+      const ts=Math.floor(spLeft/60)+':'+(spLeft%60<10?'0':'')+spLeft%60;
+      setBanner('sp-banner','warn','⚠','Wrap up!',ts);
+      setBar('sp-bar',spLeft,180,'warn');setTB('warn',ts);
+      if(spLeft<=10)beepWarn();
+    }else if(spPhase==='speaking'){
+      const m=Math.floor(spLeft/60),s=spLeft%60;const ts=m+':'+(s<10?'0':'')+s;
+      setBanner('sp-banner','rec','🎙','RESPONSE TIME',ts);
+      setBar('sp-bar',spLeft,180,'rec');setTB('rec',ts);
+    }else{
+      setBanner('sp-banner','prep','⏳','PREPARATION TIME','0:'+spLeft.toString().padStart(2,'0'));
+      setBar('sp-bar',spLeft,30,'prep');setTB('prep','0:'+spLeft.toString().padStart(2,'0'));
+    }
+  },1000);
+}
+
+// ════════════ INTERACTIVE SPEAKING ════════════
+const IS_SETS=[
+  {t1:"Oceans",t2:"Completing Projects",qs:[{t:1,q:"Describe some activities people do at the beach."},{t:1,q:"How do oceans support different types of fishing industries?"},{t:1,q:"Describe some things people build near oceans."},{t:2,q:"Describe a goal you have for next year."},{t:2,q:"How should someone prioritize tasks on long-term projects?"},{t:2,q:"How do you prepare for unexpected challenges when completing a project?"}]},
+  {t1:"Changing Habits",t2:"Rainy Weather",qs:[{t:1,q:"Describe something you do every morning."},{t:1,q:"How might new technology help people change their habits?"},{t:1,q:"How does influence from others impact the habits people adopt?"},{t:2,q:"Describe some things people might do when it rains."},{t:2,q:"Why do some people love rain while others dislike it?"},{t:2,q:"How can rain affect transportation in a city?"}]},
+  {t1:"Geography",t2:"Technology Devices",qs:[{t:1,q:"Describe a place you recently visited and enjoyed."},{t:1,q:"Describe some differences in geography between your country and a neighboring one."},{t:1,q:"How can understanding geography help people in daily life?"},{t:2,q:"When might someone choose a laptop instead of a smartphone?"},{t:2,q:"Why might a laptop be better for writing long documents?"},{t:2,q:"How can laptops or smartphones be useful in education?"}]},
+  {t1:"Education",t2:"Social Media",qs:[{t:1,q:"Describe the most important thing you have ever learned in school."},{t:1,q:"How has education changed in recent years due to technology?"},{t:1,q:"What makes a classroom environment effective for learning?"},{t:2,q:"How does social media affect the way people communicate today?"},{t:2,q:"Why do some people share so much of their personal life online?"},{t:2,q:"How can social media be used positively for learning or work?"}]},
+  {t1:"Food & Cooking",t2:"The Environment",qs:[{t:1,q:"Describe a traditional meal from your country and how it is prepared."},{t:1,q:"Why do some people prefer to cook at home rather than eat out?"},{t:1,q:"How has food culture in your country changed in recent decades?"},{t:2,q:"Describe an environmental problem that affects your region."},{t:2,q:"What steps can individuals take to reduce their environmental impact?"},{t:2,q:"How can businesses contribute to solving environmental challenges?"}]},
+  {t1:"Transportation",t2:"Hobbies & Free Time",qs:[{t:1,q:"How do people in your city most commonly get around?"},{t:1,q:"What are the advantages and disadvantages of public transportation?"},{t:1,q:"How do you think transportation will change in the next 20 years?"},{t:2,q:"Describe a hobby or activity you do in your free time."},{t:2,q:"How can hobbies benefit a person's mental or physical health?"},{t:2,q:"Is it important to have a hobby outside of work or school? Why?"}]},
+  {t1:"Work & Career",t2:"Travel",qs:[{t:1,q:"Describe the type of work environment where you feel most productive."},{t:1,q:"What qualities are most important in a good employee?"},{t:1,q:"How has remote work changed professional relationships?"},{t:2,q:"Describe a place you have always wanted to travel to and why."},{t:2,q:"What are the biggest benefits of traveling to other countries?"},{t:2,q:"How can travel help someone understand the world better?"}]},
+  {t1:"Health & Wellness",t2:"Community & Neighbors",qs:[{t:1,q:"Describe a healthy habit you have developed in your life."},{t:1,q:"Why is it difficult for some people to maintain a healthy lifestyle?"},{t:1,q:"How can communities encourage healthier habits among members?"},{t:2,q:"Describe what makes a neighborhood a good place to live."},{t:2,q:"How important is it to have a close relationship with your neighbors?"},{t:2,q:"What responsibilities do people have toward their communities?"}]},
+  {t1:"Sports & Competition",t2:"Music & Arts",qs:[{t:1,q:"Describe a sport you enjoy watching or playing."},{t:1,q:"Why are competitive sports valuable for young people?"},{t:1,q:"What do sports teams teach society about teamwork?"},{t:2,q:"Describe a type of music you enjoy and what it means to you."},{t:2,q:"How does music or art influence people's emotions and daily lives?"},{t:2,q:"How can access to arts benefit communities?"}]},
+  {t1:"Animals & Nature",t2:"Shopping & Commerce",qs:[{t:1,q:"Describe an animal you find particularly interesting or impressive."},{t:1,q:"Why is it important for humans to protect wildlife and habitats?"},{t:1,q:"How do people's relationships with animals reflect cultural values?"},{t:2,q:"How have your shopping habits changed in recent years?"},{t:2,q:"What are the advantages of buying locally produced goods?"},{t:2,q:"How do advertising and marketing influence consumer choices?"}]},
+  {t1:"Family & Relationships",t2:"Cities & Urban Life",qs:[{t:1,q:"Describe what family means to you and its role in your daily life."},{t:1,q:"How do family relationships influence young people's career choices?"},{t:1,q:"How has the concept of family changed over the past few generations?"},{t:2,q:"Describe the city or town you live in and what makes it unique."},{t:2,q:"What are the biggest challenges of living in a densely populated urban area?"},{t:2,q:"How can city planners make urban spaces more livable?"}]},
+  {t1:"Language & Communication",t2:"Money & Finance",qs:[{t:1,q:"How do you communicate differently with friends versus employers?"},{t:1,q:"Why is learning a foreign language valuable in today's world?"},{t:1,q:"How will the way people communicate change in the next 20 years?"},{t:2,q:"Describe a time when you had to budget your money carefully."},{t:2,q:"Why is financial education important for young people?"},{t:2,q:"How do people's attitudes toward money differ across cultures?"}]},
+  {t1:"Science & Innovation",t2:"Traditions & Change",qs:[{t:1,q:"Describe a scientific discovery or innovation you find fascinating."},{t:1,q:"How has scientific progress improved lives in the last 100 years?"},{t:1,q:"What are the greatest scientific challenges facing humanity today?"},{t:2,q:"Describe a tradition you want to preserve for future generations."},{t:2,q:"How do traditions help communities maintain identity and belonging?"},{t:2,q:"How can societies balance respecting traditions while adapting to modern change?"}]},
+  {t1:"Home & Living Spaces",t2:"Learning & Study Habits",qs:[{t:1,q:"Describe the most important room in your home and why it matters."},{t:1,q:"What qualities make a house or apartment feel like a comfortable home?"},{t:1,q:"How have people's ideas about home changed over the last generation?"},{t:2,q:"Describe how you prefer to study or learn something new."},{t:2,q:"What are the biggest distractions that prevent effective studying?"},{t:2,q:"How can teachers make learning more engaging for students?"}]},
+  {t1:"Leadership & Power",t2:"Celebrations & Festivals",qs:[{t:1,q:"Describe someone you consider a great leader. What makes them effective?"},{t:1,q:"Why is good leadership important in schools, workplaces, and governments?"},{t:1,q:"How does a good leader handle disagreement within a team?"},{t:2,q:"Describe your favorite holiday or festival and how you celebrate it."},{t:2,q:"Why are celebrations important for communities and national identity?"},{t:2,q:"How has technology changed the way people celebrate special occasions?"}]},
+  {t1:"Volunteering",t2:"Fashion & Self-Expression",qs:[{t:1,q:"Describe a time when you helped your community. What did you do?"},{t:1,q:"Why is volunteering valuable for both the giver and receiver?"},{t:1,q:"How can organizations encourage more young people to volunteer?"},{t:2,q:"How do you express your personality through the way you dress?"},{t:2,q:"How does fashion reflect the culture and values of a society?"},{t:2,q:"Is there too much pressure to follow fashion trends? Why?"}]},
+  {t1:"Reading & Books",t2:"Dreams & Ambition",qs:[{t:1,q:"Describe a book that had a lasting impact on you."},{t:1,q:"Why is reading important even in the age of videos and social media?"},{t:1,q:"How has reading changed with the rise of e-books and audiobooks?"},{t:2,q:"Describe a dream or ambition you have for your future."},{t:2,q:"What obstacles stand between people and achieving their biggest goals?"},{t:2,q:"How can a person stay motivated when progress toward a goal seems slow?"}]},
+  {t1:"Childhood & Growing Up",t2:"Globalization & Culture",qs:[{t:1,q:"Describe one of your favorite memories from childhood."},{t:1,q:"How has growing up in your country shaped the way you see the world?"},{t:1,q:"What is the most important thing parents can teach their children?"},{t:2,q:"Describe a way that globalization has affected your country's culture."},{t:2,q:"What are the benefits and risks of countries becoming more culturally similar?"},{t:2,q:"How can small countries preserve their unique culture in a globalized world?"}]},
+  {t1:"Sleep & Rest",t2:"Innovation & Startups",qs:[{t:1,q:"Describe your sleep habits and why you think good sleep is important."},{t:1,q:"How does lack of sleep affect performance at school or work?"},{t:1,q:"What can society do to help people develop better sleep habits?"},{t:2,q:"Describe a product or app idea that you think would be useful."},{t:2,q:"What qualities does a successful entrepreneur need?"},{t:2,q:"How can governments or universities better support young entrepreneurs?"}]},
+  {t1:"Cooking & Nutrition",t2:"Friendship & Social Life",qs:[{t:1,q:"Describe a dish you enjoy cooking or eating and what makes it special."},{t:1,q:"How have eating habits changed compared to 30 years ago?"},{t:1,q:"Why is it important for people to understand nutrition?"},{t:2,q:"Describe what you look for in a good friend."},{t:2,q:"How do friendships formed in childhood differ from those in adulthood?"},{t:2,q:"How has social media changed the way people form and maintain friendships?"}]},
+];
+
+let isIv=null,curSet=null,curQ=0,isLeft=35,isRec=false,isPhase='idle';
+
+function buildISProg(total,cur,t2s){
+  const c=document.getElementById('is-prog');c.innerHTML='';
+  for(let i=0;i<total;i++){
+    const d=document.createElement('div');
+    d.className='is-dot'+(i>=t2s?' t2':'')+(i<cur?' done':i===cur?' cur':'');
+    c.appendChild(d);
+    if(i===t2s-1&&i<total-1){const s=document.createElement('span');s.className='is-div';s.textContent='|';c.appendChild(s);}
+  }
+}
+
+function newISSet(){
+  clearInterval(isIv);isIv=null;stopRec();stopWaveform();stopSpeak();
+  curSet=IS_SETS[Math.floor(Math.random()*IS_SETS.length)];
+  curQ=0;isRec=false;isPhase='idle';
+  document.getElementById('is-set-label').textContent=curSet.t1+' & '+curSet.t2;
+  document.getElementById('is-next').style.display='none';
+  document.getElementById('is-transcript').classList.remove('active');
+  document.getElementById('is-playback').classList.remove('show');
+  showISQ(true);
+}
+
+function showISQ(doSpeak){
+  clearInterval(isIv);isIv=null;stopRec();stopWaveform();
+  isRec=false;isPhase='idle';isLeft=35;
+  const q=curSet.qs[curQ];
+  const t2s=curSet.qs.filter(x=>x.t===1).length;
+  buildISProg(curSet.qs.length,curQ,t2s);
+  const badge=document.getElementById('is-badge');
+  badge.className='q-badge '+(q.t===1?'t1':'t2');badge.textContent='Topic '+(q.t===1?'1':'2');
+  document.getElementById('is-topic-name').textContent=q.t===1?curSet.t1:curSet.t2;
+  document.getElementById('is-q-label').textContent='Question '+(curQ+1)+' of '+curSet.qs.length;
+  document.getElementById('is-q').textContent=q.q;
+  document.getElementById('is-mic').className='mic-btn disabled';
+  document.getElementById('is-pulse').classList.remove('active');
+  document.getElementById('is-next').style.display='none';
+  document.getElementById('is-transcript').classList.remove('active');
+  setBanner('is-banner','idle','⏸','AI is preparing…','35s');
+  setBar('is-bar',1,1,'');setTB(null,'');
+
+  if(doSpeak!==false){
+    // Avatar talks
+    const av=document.getElementById('is-avatar');
+    av.classList.add('talking');
+    const dotEl=document.getElementById('is-tts-dots');
+    const lblEl=document.getElementById('is-tts-label');
+    dotEl.classList.add('show');lblEl.textContent=' Speaking…';lblEl.style.display='block';
+    setBanner('is-banner','prep','🤖','AI EXAMINER — listening…','—');
+    showPrepOverlay('interactive');
+    speak(q.q,()=>{
+      av.classList.remove('talking');
+      dotEl.classList.remove('show');lblEl.style.display='none';
+      setBanner('is-banner','idle','🎙','Your turn — press Answer','35s');
+      document.getElementById('is-mic').className='mic-btn';
+      setBar('is-bar',35,35,'');
+    });
+  }
+}
+
+function startISTimer(){
+  if(isPhase==='speaking')return;
+  stopSpeak();
+  const av=document.getElementById('is-avatar');av.classList.remove('talking');
+  isPhase='speaking';isLeft=35;
+  setBanner('is-banner','rec','🎙','RESPONSE TIME — Speak!','35s');
+  setBar('is-bar',35,35,'rec');setTB('rec','35s');
+  document.getElementById('is-mic').className='mic-btn';
+  showDoneBtn('interactive',true);
+  // auto-start recording
+  if(micGranted.val&&!isRec){
+    if(startRec('is-audio',null)){isRec=true;
+      document.getElementById('is-mic').className='mic-btn rec';
+      document.getElementById('is-pulse').classList.add('active');
+      startWaveform('wv-is');
+      const tb=document.getElementById('is-transcript');tb.classList.add('active');tb.textContent='';
+    }
+  }
+  isIv=setInterval(()=>{
+    isLeft--;
+    const ts=isLeft+'s';
+    if(isLeft<=0){
+      beepDone();clearInterval(isIv);isIv=null;
+      const _isTxt=document.getElementById('is-transcript').textContent;
+      if(isRec){stopRec();stopWaveform();isRec=false;
+        document.getElementById('is-mic').className='mic-btn disabled';
+        document.getElementById('is-pulse').classList.remove('active');
+        document.getElementById('is-playback').classList.add('show');
+      }
+      const isLast=curQ>=curSet.qs.length-1;
+      lastTranscript=_isTxt;lastQuestion=curSet.qs[curQ].q;lastQType='Interactive Speaking';
+      addXP(5);hidePrepOverlay();
+      if(isLast){
+        setBanner('is-banner','idle','🏁','Set complete! ¡Excelente!','—');
+        setBar('is-bar',0,1,'');setTB(null,'');
+        setTimeout(()=>showScore(analyzeTranscript(_isTxt,35),newISSet,'🔀 Nuevo Set'),700);
+      }else{
+        setBanner('is-banner','idle','✅','Respuesta guardada ✓','—');
+        setBar('is-bar',0,1,'');setTB(null,'');
+        setTimeout(()=>showScore(analyzeTranscript(_isTxt,35),nextISQ,'Siguiente Pregunta →'),700);
+      }
+      return;
+    }
+    if(isLeft<=8){
+      setBanner('is-banner','warn','⚠','Wrap up!',ts);
+      setBar('is-bar',isLeft,35,'warn');setTB('warn',ts);
+      beepWarn();
+    }else{
+      setBanner('is-banner','rec','🎙','RESPONSE TIME',ts);
+      setBar('is-bar',isLeft,35,'rec');setTB('rec',ts);
+    }
+  },1000);
+}
+
+function nextISQ(){
+  curQ++;
+  if(curQ>=curSet.qs.length){newISSet();return;}
+  showISQ(true);
+}
+
+// ─── TEMPLATE TOOLS ───
+function hearPhrase(text){speak(text.replace(/\.\.\./g,'. '),null);}
+function toggleMemorize(btn){
+  const body=btn.closest('.tpl-card').querySelector('.tpl-body');
+  const phrases=body.querySelectorAll('.tpl-phrase');
+  const hiding=!btn.classList.contains('active');
+  btn.classList.toggle('active',hiding);
+  btn.textContent=hiding?'👁 Reveal Phrases':'🧠 Test Yourself';
+  phrases.forEach(p=>{
+    p.classList.toggle('memorize-hidden',hiding);
+    p.onclick=hiding?()=>p.classList.remove('memorize-hidden'):null;
+  });
+}
+// Legacy toggleTpl kept for safety (no longer used but avoid errors if called)
+function toggleTpl(hdr){hdr.classList.toggle('open');hdr.nextElementSibling&&hdr.nextElementSibling.classList.toggle('open');}
+// Missing function fix
+function resetPhotoTimer(){}
+
+// ─── SCORING ───
+function analyzeTranscript(text,targetSecs){
+  const clean=(text||'').replace(/<[^>]+>/g,'').trim();
+  if(!clean||clean.length<10)return null;
+  const allWords=clean.split(/\s+/).filter(w=>w.length>0);
+  const wc=allWords.length;
+  if(wc<4)return null;
+  const wpm=Math.round(wc/(targetSecs/60));
+
+  // Fluency 0–100: ideal 110–145 wpm
+  const fl=wpm<40?18:wpm<85?18+(wpm-40)*0.82:wpm<120?55+(wpm-85)*1.1:wpm<150?93.5-(wpm-120)*0.45:Math.max(25,80-(wpm-150)*0.8);
+
+  // Vocabulary 0–100
+  const lw=allWords.map(w=>w.toLowerCase().replace(/[^a-z]/g,''));
+  const unique=new Set(lw.filter(w=>w.length>2)).size;
+  const ratio=unique/Math.max(wc,1);
+  const longWds=lw.filter(w=>w.length>=7).length;
+  const voc=Math.min(100,ratio*160+(longWds/Math.max(wc,1))*80);
+
+  // Structure 0–100: discourse markers
+  const lower=clean.toLowerCase();
+  const MARKERS=['first','firstly','to begin','second','secondly','finally','however','although','on the other hand','additionally','furthermore','moreover','in addition','therefore','consequently','in conclusion','to conclude','to sum up','for example','for instance','in my opinion','i believe','i think','in my experience','personally','from my perspective'];
+  const usedM=MARKERS.filter(m=>lower.includes(m));
+  const str=Math.min(100,10+usedM.length*15);
+
+  // Completion 0–100
+  const expectedW=120*(targetSecs/60);
+  const comp=Math.min(100,Math.round((wc/expectedW)*100));
+
+  // Overall DET simulation 55–130
+  const composite=fl*0.35+voc*0.30+str*0.20+comp*0.15;
+  const overall=Math.round(55+(composite/100)*75);
+
+  const grade=overall>=115?'A+':overall>=105?'A':overall>=95?'B+':overall>=85?'B':overall>=75?'C+':overall>=65?'C':'D';
+  const gradeColor=overall>=105?'var(--g)':overall>=85?'var(--b)':overall>=70?'var(--y)':'var(--r)';
+  const level=overall>=115?'Excellent':overall>=100?'Good':overall>=85?'Fair':overall>=70?'Developing':'Needs Work';
+
+  const tips=[];
+  if(wpm<85){tips.push({ok:'bad',t:'Pace: ~'+wpm+' wpm — speak faster (target 110–140)',es:'Ritmo muy lento ('+wpm+' pal/min). Habla más rápido. Meta: 110–140 palabras/min'});}
+  else if(wpm>165){tips.push({ok:'bad',t:'Pace: ~'+wpm+' wpm — slow down a little',es:'Muy rápido ('+wpm+' pal/min). Desacelera para pronunciar mejor'});}
+  else{tips.push({ok:'ok',t:'Good pace: ~'+wpm+' words/min ✓',es:'¡Buen ritmo! '+wpm+' palabras por minuto ✓'});}
+
+  if(ratio<0.45){tips.push({ok:'bad',t:'Vocabulary: too repetitive — use different words',es:'Vocabulario repetitivo. Usa sinónimos y palabras variadas'});}
+  else if(longWds/Math.max(wc,1)>0.12){tips.push({ok:'ok',t:'Excellent vocabulary ✓',es:'¡Excelente! Usaste vocabulario avanzado ✓'});}
+  else{tips.push({ok:'ok',t:'Good vocabulary variety ✓',es:'Buen vocabulario variado ✓'});}
+
+  if(usedM.length===0){tips.push({ok:'bad',t:'Missing connectors: "First…", "Because…", "Also…"',es:'Faltan conectores. Usa: "First" (Primero), "Because" (Porque), "Also" (También)'});}
+  else if(usedM.length>=3){tips.push({ok:'ok',t:'Strong structure: used '+usedM.slice(0,3).join(', ')+' ✓',es:'¡Excelente estructura! Usaste buenos conectores ✓'});}
+  else{tips.push({ok:'mid',t:'Good start — add more connectors',es:'Bien. Agrega más conectores: "However", "In addition", "For example"'});}
+
+  if(comp<50){tips.push({ok:'bad',t:'Only '+wc+' words — speak much more!',es:'Solo '+wc+' palabras. ¡Habla MÁS! Llena todo el tiempo disponible'});}
+  else if(comp>=80){tips.push({ok:'ok',t:wc+' words — excellent use of time ✓',es:wc+' palabras. ¡Excelente! Usaste bien el tiempo ✓'});}
+  else{tips.push({ok:'mid',t:wc+' words — try speaking a bit longer',es:wc+' palabras. Bien, intenta hablar un poco más'});}
+
+  return{overall,grade,gradeColor,level,fluency:Math.round(fl),vocab:Math.round(voc),structure:Math.round(str),completion:comp,wpm,wc,tips};
+}
+
+let _scoreNextCb=null;
+function showScore(result,nextCb,nextLabel){
+  _scoreNextCb=nextCb||null;
+  const m=document.getElementById('score-modal');
+  if(!m)return;
+  if(!result){if(nextCb)nextCb();return;}
+  // reset AI section for each new score
+  improvedText='';
+  const aiBtn=document.getElementById('sc-ai-btn');
+  if(aiBtn){aiBtn.disabled=false;aiBtn.textContent='🤖 Mejorar mi respuesta con IA';aiBtn.style.background='';aiBtn.style.boxShadow='';}
+  const aiSec=document.getElementById('sc-ai-section');if(aiSec)aiSec.classList.remove('show');
+  const aiRes=document.getElementById('sc-ai-result');if(aiRes)aiRes.style.display='none';
+  const aiErr=document.getElementById('sc-ai-error');if(aiErr)aiErr.style.display='none';
+  const aiLoad=document.getElementById('sc-ai-loading');if(aiLoad)aiLoad.style.display='none';
+  const pct=Math.round(((result.overall-10)/150)*100);
+  const circle=document.getElementById('sc-circle');
+  circle.style.background=`conic-gradient(${result.gradeColor} ${pct}%, var(--br) 0%)`;
+  document.getElementById('sc-num').textContent=result.overall;
+  document.getElementById('sc-grade').textContent=result.grade;
+  document.getElementById('sc-grade').style.color=result.gradeColor;
+  document.getElementById('sc-level').textContent=result.level;
+  document.getElementById('sc-words').textContent=result.wc+' palabras · '+result.wpm+' ppm';
+  const bars={fluency:result.fluency,vocab:result.vocab,structure:result.structure,completion:result.completion};
+  Object.entries(bars).forEach(([k,v])=>{
+    const fill=document.getElementById('sb-'+k);
+    const valEl=document.getElementById('sv-'+k);
+    if(!fill||!valEl)return;
+    fill.style.width='0%';
+    fill.style.background=v>=70?'var(--g)':v>=50?'var(--y)':'var(--r)';
+    valEl.textContent=v;
+    setTimeout(()=>fill.style.width=v+'%',150);
+  });
+  const tips=document.getElementById('sc-tips');
+  tips.innerHTML=result.tips.map(t=>`<div class="sc-tip ${t.ok}"><span class="sc-tip-icon">${t.ok==='ok'?'✓':t.ok==='bad'?'✗':'→'}</span><div><div>${t.t}</div>${t.es?`<span class="sc-bilin">🇪🇸 ${t.es}</span>`:''}</div></div>`).join('');
+  const btns=document.getElementById('sc-btns');
+  if(nextCb){
+    btns.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="closeScore()">✕ Cerrar</button><button class="btn btn-b btn-sm" id="sc-next-btn">${nextLabel||'Siguiente →'}</button>`;
+    document.getElementById('sc-next-btn').onclick=()=>{closeScore();_scoreNextCb&&_scoreNextCb();};
+  }else{
+    btns.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="closeScore()">✕ Cerrar</button><button class="btn btn-g btn-sm" onclick="closeScore()">▶ Seguir Practicando</button>`;
+  }
+  m.style.display='flex';
+  m.style.alignItems='center';
+  m.style.justifyContent='center';
+}
+function closeScore(){const m=document.getElementById('score-modal');if(m)m.style.display='none';}
+
+// ════════════ AI CONFIG ════════════
+function getAIMode(){return localStorage.getItem('ai_mode')||'claude';}
+function getLMSPort(){return localStorage.getItem('lms_port')||'1234';}
+
+function setAIMode(mode){
+  localStorage.setItem('ai_mode',mode);
+  document.getElementById('mode-claude-btn').classList.toggle('active',mode==='claude');
+  document.getElementById('mode-lms-btn').classList.toggle('active',mode==='lmstudio');
+  document.getElementById('lms-claude-section').style.display=mode==='claude'?'':'none';
+  document.getElementById('lms-studio-section').style.display=mode==='lmstudio'?'':'none';
+}
+
+function openLMSModal(){
+  document.getElementById('lms-modal').classList.add('open');
+  document.getElementById('lms-port-input').value=getLMSPort();
+  document.getElementById('claude-key-input').value=localStorage.getItem('claude_api_key')||'';
+  setAIMode(getAIMode());
+}
+function closeLMSModal(){document.getElementById('lms-modal').classList.remove('open');}
+function saveLMSSettings(){
+  const mode=getAIMode();
+  if(mode==='claude'){
+    const key=document.getElementById('claude-key-input').value.trim();
+    if(key)localStorage.setItem('claude_api_key',key);
+  }else{
+    localStorage.setItem('lms_port',document.getElementById('lms-port-input').value.trim()||'1234');
+  }
+  closeLMSModal();
+  pingLMSStatus();
+}
+
+async function testLMSConnection(){
+  const btn=document.getElementById('lms-test-btn');
+  btn.textContent='⏳ Conectando…';btn.disabled=true;
+  try{
+    const port=getLMSPort();
+    const r=await fetch(`http://127.0.0.1:${port}/v1/models`,{signal:AbortSignal.timeout(4000)});
+    if(!r.ok)throw new Error('status '+r.status);
+    const d=await r.json();
+    const name=(d.data&&d.data[0])?d.data[0].id:'(modelo cargado)';
+    btn.textContent='✅ Conectado — '+name;
+    btn.style.color='var(--gd)';btn.style.borderColor='var(--g)';
+    updateLMSStatusDot(true);
+  }catch(e){
+    btn.textContent='❌ Sin conexión — ¿Está el servidor corriendo?';
+    btn.style.color='var(--r)';btn.style.borderColor='var(--r)';
+    updateLMSStatusDot(false);
+  }
+  btn.disabled=false;
+}
+
+async function testClaudeConnection(){
+  const btn=document.getElementById('claude-test-btn');
+  btn.textContent='⏳ Probando…';btn.disabled=true;
+  try{
+    const key=document.getElementById('claude-key-input').value.trim();
+    if(!key)throw new Error('Ingresa tu API key primero');
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:10,messages:[{role:'user',content:'Hi'}]}),
+      signal:AbortSignal.timeout(10000)
+    });
+    if(!r.ok){const d=await r.json();throw new Error(d.error?.message||'Error '+r.status);}
+    btn.textContent='✅ Conectado — Claude Haiku listo';
+    btn.style.color='var(--gd)';btn.style.borderColor='var(--g)';
+    updateLMSStatusDot(true);
+  }catch(e){
+    btn.textContent='❌ '+e.message;
+    btn.style.color='var(--r)';btn.style.borderColor='var(--r)';
+    updateLMSStatusDot(false);
+  }
+  btn.disabled=false;
+}
+
+function updateLMSStatusDot(ok){
+  const dot=document.getElementById('lms-dot');
+  if(dot)dot.style.background=ok?'var(--g)':'var(--r)';
+}
+
+async function pingLMSStatus(){
+  const mode=getAIMode();
+  if(mode==='claude'){
+    const key=localStorage.getItem('claude_api_key');
+    updateLMSStatusDot(!!(key&&key.length>20));
+    return;
+  }
+  try{
+    const r=await fetch(`http://127.0.0.1:${getLMSPort()}/v1/models`,{signal:AbortSignal.timeout(2000)});
+    updateLMSStatusDot(r.ok);
+  }catch(e){updateLMSStatusDot(false);}
+}
+
+async function callClaudeAPI(messages){
+  const key=localStorage.getItem('claude_api_key');
+  if(!key)throw new Error('No tienes API key. Haz clic en "IA Config" para configurarla.');
+  const sys=messages.find(m=>m.role==='system');
+  const userMsgs=messages.filter(m=>m.role!=='system');
+  const body={model:'claude-haiku-4-5-20251001',max_tokens:700,messages:userMsgs};
+  if(sys)body.system=sys.content;
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify(body),
+    signal:AbortSignal.timeout(30000)
+  });
+  if(!r.ok){const d=await r.json();throw new Error(d.error?.message||'Claude API error '+r.status);}
+  const d=await r.json();
+  const txt=d.content&&d.content[0]&&d.content[0].text;
+  if(!txt)throw new Error('Respuesta vacía de Claude');
+  return txt.trim();
+}
+
+async function callLMStudio(messages){
+  const port=getLMSPort();
+  const r=await fetch(`http://127.0.0.1:${port}/v1/chat/completions`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer lm-studio'},
+    body:JSON.stringify({model:'local-model',messages,temperature:0.45,max_tokens:700,stream:false})
+  });
+  if(!r.ok)throw new Error('LM Studio respondió '+r.status+'. ¿Está el servidor activo?');
+  const d=await r.json();
+  const txt=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+  if(!txt)throw new Error('Respuesta vacía del modelo');
+  return txt.trim();
+}
+
+// ════════════ AI IMPROVEMENT ════════════
+async function requestImprovement(){
+  const btn=document.getElementById('sc-ai-btn');
+  const section=document.getElementById('sc-ai-section');
+  const loading=document.getElementById('sc-ai-loading');
+  const resultEl=document.getElementById('sc-ai-result');
+  const errEl=document.getElementById('sc-ai-error');
+
+  if(!lastTranscript||lastTranscript.replace(/<[^>]+>/g,'').trim().length<8){
+    section.classList.add('show');errEl.style.display='block';
+    errEl.textContent='No se detectó suficiente texto. Habla más cerca del micrófono o activa los permisos.';
+    return;
+  }
+
+  btn.disabled=true;btn.textContent='⏳ Mejorando con IA…';
+  section.classList.add('show');loading.style.display='flex';
+  resultEl.style.display='none';errEl.style.display='none';
+
+  const cleanTxt=lastTranscript.replace(/<[^>]+>/g,'').trim();
+
+  const sysPrompt=`You are a DET (Duolingo English Test) speaking coach for a Spanish-speaking student. Your job is to rewrite their spoken response with better English while keeping their exact ideas.
+
+Rules you MUST follow:
+- Keep ALL their original ideas and personal examples unchanged
+- Fix grammar: verb tenses, missing articles (a/an/the), wrong prepositions
+- Add natural DET connectors: "In my opinion", "First of all", "For example", "However", "In conclusion"
+- Replace repetitive or basic words with better vocabulary
+- Sound like natural SPOKEN English, not written essays
+- Wrap EVERY phrase or word you changed in **double asterisks**
+- Return ONLY the improved response text — no labels, no explanations, no intro`;
+
+  const userPrompt=`Question: "${lastQuestion}"
+Task: ${lastQType}
+
+Student's response:
+"${cleanTxt}"
+
+Rewrite it improved for DET.`;
+
+  const messages=[{role:'system',content:sysPrompt},{role:'user',content:userPrompt}];
+  try{
+    const raw=getAIMode()==='claude'
+      ? await callClaudeAPI(messages)
+      : await callLMStudio(messages);
+    improvedText=raw.replace(/^["']|["']$/g,'').trim();
+    loading.style.display='none';
+    document.getElementById('sc-original-txt').textContent=cleanTxt;
+    document.getElementById('sc-improved-txt').innerHTML=markupImproved(improvedText);
+    resultEl.style.display='block';
+    btn.textContent='✅ Mejorado';btn.style.background='var(--g)';btn.style.boxShadow='0 4px 0 var(--gd)';
+  }catch(e){
+    loading.style.display='none';
+    errEl.textContent='❌ '+e.message;errEl.style.display='block';
+    btn.disabled=false;btn.textContent='🤖 Mejorar mi respuesta con IA';
+  }
+}
+
+function markupImproved(text){
+  const safe=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return safe.replace(/\*\*(.+?)\*\*/g,'<mark>$1</mark>');
+}
+
+function hearImproved(){
+  const plain=improvedText.replace(/\*\*/g,'');
+  if(plain)speak(plain,null);
+}
+
+// ════════════ SHADOWING MODE ════════════
+let shadowRecActive=false;
+
+function openShadowing(){
+  if(!improvedText)return;
+  closeScore();
+  const plain=improvedText.replace(/\*\*/g,'');
+  document.getElementById('shadow-text').innerHTML=markupImproved(improvedText);
+  document.getElementById('shadow-cmp-improved').textContent=plain;
+  document.getElementById('shadow-transcript').textContent='Tu respuesta aparecerá aquí…';
+  document.getElementById('shadow-compare').classList.remove('show');
+  document.getElementById('shadow-compare-btn').style.display='none';
+  document.getElementById('shadow-rec-btn').textContent='🎙 Grabar mi respuesta';
+  document.getElementById('shadow-rec-btn').onclick=startShadowRec;
+  document.getElementById('shadow-mic').className=micGranted.val?'mic-btn':'mic-btn disabled';
+  document.getElementById('shadow-pulse').classList.remove('active');
+  shadowRecActive=false;
+  document.getElementById('shadow-modal').classList.add('open');
+  document.getElementById('shadow-status').textContent='🔊 Escucha cómo suena la versión mejorada…';
+  speak(plain,()=>{
+    document.getElementById('shadow-status').textContent='Ahora repítelo tú. Presiona Grabar cuando estés listo.';
+  });
+}
+
+function closeShadowing(){
+  stopRec();stopRecognition();stopSpeak();shadowRecActive=false;
+  document.getElementById('shadow-modal').classList.remove('open');
+}
+
+function hearImprovedInShadow(){
+  const plain=improvedText.replace(/\*\*/g,'');
+  document.getElementById('shadow-status').textContent='🔊 Reproduciendo…';
+  speak(plain,()=>{
+    document.getElementById('shadow-status').textContent='Ahora repítelo tú. Presiona Grabar cuando estés listo.';
+  });
+}
+
+function startShadowRec(){
+  if(shadowRecActive||!micGranted.val){if(!micGranted.val)askMic();return;}
+  stopSpeak();
+  document.getElementById('shadow-status').textContent='🔴 Grabando… habla ahora';
+  document.getElementById('shadow-rec-btn').textContent='⏹ Parar grabación';
+  document.getElementById('shadow-rec-btn').onclick=stopShadowRec;
+  document.getElementById('shadow-mic').className='mic-btn rec';
+  document.getElementById('shadow-pulse').classList.add('active');
+  const tb=document.getElementById('shadow-transcript');tb.textContent='';
+  // hijack recognition for shadow box
+  if(!recognition)setupRecognition();
+  if(recognition){
+    recognition.transcript_final='';
+    recognition.onresult=e=>{
+      let fin='',intr='';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        if(e.results[i].isFinal)fin+=e.results[i][0].transcript;
+        else intr+=e.results[i][0].transcript;
+      }
+      recognition.transcript_final=(recognition.transcript_final||'')+fin;
+      tb.textContent=recognition.transcript_final+(intr?' '+intr:'');
+    };
+    try{recognition.start();recogActive=true;}catch(ex){}
+  }
+  startRec('ph-audio',null);
+  shadowRecActive=true;
+}
+
+function stopShadowRec(){
+  stopRec();stopRecognition();shadowRecActive=false;
+  document.getElementById('shadow-mic').className='mic-btn disabled';
+  document.getElementById('shadow-pulse').classList.remove('active');
+  document.getElementById('shadow-status').textContent='✅ Listo — compara tu versión con la mejorada';
+  document.getElementById('shadow-rec-btn').textContent='🔄 Grabar de nuevo';
+  document.getElementById('shadow-rec-btn').onclick=startShadowRec;
+  document.getElementById('shadow-compare-btn').style.display='';
+}
+
+function showShadowCompare(){
+  const yours=document.getElementById('shadow-transcript').textContent.trim();
+  document.getElementById('shadow-cmp-yours').textContent=yours||'(sin transcripción)';
+  document.getElementById('shadow-compare').classList.add('show');
+  document.getElementById('shadow-compare-btn').style.display='none';
+}
+
+function toggleShadowRec(){
+  if(shadowRecActive)stopShadowRec();else startShadowRec();
+}
+
+// ════════════ XP SYSTEM ════════════
+function getTodayKey(){return new Date().toDateString();}
+function getRawProgress(){return JSON.parse(localStorage.getItem('det_progress')||'{"streak":0,"lastDay":""}');}
+function saveRawProgress(d){localStorage.setItem('det_progress',JSON.stringify(d));}
+function getTodayXP(){
+  const d=getRawProgress();const today=getTodayKey();
+  return d[today]||{xp:0,exercises:0};
+}
+function addXP(amount){
+  const today=getTodayKey();
+  const d=getRawProgress();
+  if(!d[today])d[today]={xp:0,exercises:0};
+  d[today].xp+=amount;
+  d[today].exercises=(d[today].exercises||0)+1;
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  if(d.lastDay===yesterday)d.streak=(d.streak||0)+1;
+  else if(d.lastDay!==today)d.streak=1;
+  d.lastDay=today;
+  saveRawProgress(d);
+  updateXPUI();
+  showXPPop('+'+amount+' XP');
+}
+function updateXPUI(){
+  const {xp,exercises}=getTodayXP();
+  const d=getRawProgress();
+  const xpEl=document.getElementById('xp-badge');
+  if(xpEl)xpEl.textContent='⚡ '+xp+' XP';
+  const goal=100;
+  const bar=document.getElementById('dg-bar');
+  if(bar)bar.style.width=Math.min(100,(xp/goal)*100)+'%';
+  const sub=document.getElementById('dg-sub');
+  if(sub)sub.textContent=xp+' / '+goal+' XP · '+exercises+' ejercicios hoy';
+  const strEl=document.getElementById('dg-streak-num');
+  if(strEl)strEl.textContent=d.streak||0;
+}
+function showXPPop(text){
+  const p=document.createElement('div');p.className='xp-pop';p.textContent=text;
+  document.body.appendChild(p);setTimeout(()=>p.remove(),1600);
+}
+
+// ════════════ PREP OVERLAY ════════════
+const PREP_STEPS={
+  photo:[
+    {n:'1',name:'Overview',phrase:'"This photo shows…" / "The main focus is…"'},
+    {n:'2',name:'Foreground',phrase:'"In the foreground I can see…"'},
+    {n:'3',name:'Background',phrase:'"In the background I notice…"'},
+    {n:'4',name:'Atmosphere',phrase:'"The atmosphere is…"'},
+    {n:'5',name:'Conclusion',phrase:'"This reminds me of…"'},
+  ],
+  read:[
+    {n:'1',name:'Opinion',phrase:'"In my opinion,…" / "I believe…"'},
+    {n:'2',name:'First point',phrase:'"First of all,…" / "One reason is…"'},
+    {n:'3',name:'Second point',phrase:'"Also,…" / "Another reason is…"'},
+    {n:'4',name:'Counter',phrase:'"However,…"'},
+    {n:'5',name:'Conclusion',phrase:'"In conclusion,…"'},
+  ],
+  sample:[
+    {n:'I',name:'Intro',phrase:'"This is an interesting question…"'},
+    {n:'L',name:'Experience',phrase:'"In my experience,…" / "I remember…"'},
+    {n:'A',name:'Vocab',phrase:'"important" / "as a result" / "in my view"'},
+    {n:'S',name:'Specific',phrase:'"For example,…" / "For instance,…"'},
+    {n:'T',name:'Conclusion',phrase:'"In conclusion,…" / "To summarize,…"'},
+  ],
+  interactive:[
+    {n:'1',name:'Direct answer',phrase:'"I think…" / "I believe…"'},
+    {n:'2',name:'Reason',phrase:'"Because…" / "The reason is…"'},
+    {n:'3',name:'Example',phrase:'"For example,…" / "In my country,…"'},
+  ],
+};
+function showPrepOverlay(mod){
+  const steps=PREP_STEPS[mod];if(!steps)return;
+  const el=document.getElementById('prep-overlay');if(!el)return;
+  const cont=document.getElementById('prep-overlay-body');
+  cont.innerHTML=steps.map(s=>`<div class="po-step"><div class="po-n">${s.n}</div><div class="po-content"><div class="po-name">${s.name}</div><div class="po-phrase">${s.phrase}</div></div></div>`).join('');
+  el.classList.add('show');
+}
+function hidePrepOverlay(){
+  const el=document.getElementById('prep-overlay');if(el)el.classList.remove('show');
+}
+
+// ════════════ DRILL MODE ════════════
+const DRILL_DATA={
+  photo:{phrases:[
+    {meta:'Step 1/5 · 0–15s',name:'Overview — Visión general',phrase:'"This photo shows…"\n"The main focus of this image is…"',es:'🇪🇸 "Esta foto muestra…"\n"El foco principal es…"',tts:'This photo shows... The main focus of this image is...'},
+    {meta:'Step 2/5 · 15–40s',name:'Foreground — Primer plano',phrase:'"In the foreground I can see…"\n"A person who appears to be [verb]-ing…"',es:'🇪🇸 "En el primer plano puedo ver…"\n"Una persona que parece estar…"',tts:'In the foreground I can see... A person who appears to be working...'},
+    {meta:'Step 3/5 · 40–60s',name:'Background — El fondo',phrase:'"In the background I notice…"\n"The setting appears to be…"',es:'🇪🇸 "En el fondo noto…"\n"El lugar parece ser…"',tts:'In the background I notice... The setting appears to be...'},
+    {meta:'Step 4/5 · 60–80s',name:'Atmosphere — Atmósfera',phrase:'"The atmosphere of this photo is…"\n"I think the person feels…"',es:'🇪🇸 "La atmósfera es…"\n"Creo que la persona siente…"',tts:'The atmosphere of this photo is peaceful. I think the person feels...'},
+    {meta:'Step 5/5 · 80–90s',name:'Conclusion — Conclusión',phrase:'"This reminds me of…"\n"In my country, people often…"',es:'🇪🇸 "Esto me recuerda a…"\n"En mi país, la gente a menudo…"',tts:'This reminds me of... In my country, people often...'},
+  ]},
+  read:{phrases:[
+    {meta:'Step 1/5 · 0–12s',name:'Opinion — Tu opinión',phrase:'"In my opinion,…"\n"I think that… / I believe…"',es:'🇪🇸 "En mi opinión…"\n"Yo creo que… / Yo pienso…"',tts:'In my opinion... I think that... I believe...'},
+    {meta:'Step 2/5 · 12–38s',name:'First point — Primer punto',phrase:'"First of all,…"\n"One reason is… / For example,…"',es:'🇪🇸 "En primer lugar…"\n"Una razón es… / Por ejemplo…"',tts:'First of all... One reason is... For example...'},
+    {meta:'Step 3/5 · 38–62s',name:'Second point — Segundo punto',phrase:'"Also,…"\n"Another reason is… / In addition,…"',es:'🇪🇸 "También…"\n"Otra razón es… / Además…"',tts:'Also... Another reason is... In addition...'},
+    {meta:'Step 4/5 · 62–78s',name:'Counter — Contrapunto',phrase:'"However,…"\n"Some people think… but I believe…"',es:'🇪🇸 "Sin embargo…"\n"Algunas personas piensan… pero yo creo…"',tts:'However... Some people think differently, but I believe...'},
+    {meta:'Step 5/5 · 78–90s',name:'Conclusion — Conclusión',phrase:'"In conclusion,…"\n"That is why I think…"',es:'🇪🇸 "En conclusión…"\n"Por eso creo que…"',tts:'In conclusion... That is why I think...'},
+  ]},
+  sample:{phrases:[
+    {meta:'I · 0–15s',name:'Intro — Introducción',phrase:'"This is an interesting question."\n"I\'d like to talk about…"',es:'🇪🇸 "Esta es una pregunta interesante."\n"Me gustaría hablar sobre…"',tts:"This is an interesting question. I'd like to talk about..."},
+    {meta:'L · 15–55s',name:'Life experience — Experiencia',phrase:'"In my experience,…"\n"When I was young,… / I remember that…"',es:'🇪🇸 "En mi experiencia…"\n"Cuando era joven… / Recuerdo que…"',tts:'In my experience... When I was young... I remember that...'},
+    {meta:'A · throughout',name:'Advanced vocab — Vocabulario',phrase:'"important" / "as a result"\n"because of this" / "in my view"',es:'🇪🇸 "importante" / "como resultado"\n"por esto" / "en mi opinión"',tts:'This is very important. As a result. Because of this. In my view...'},
+    {meta:'S · 55–120s',name:'Specific detail — Ejemplo',phrase:'"For example,…"\n"For instance,… / A good example is…"',es:'🇪🇸 "Por ejemplo…"\n"Un buen ejemplo es…"',tts:'For example... For instance... A good example is...'},
+    {meta:'T · last 30s',name:'To conclude — Conclusión',phrase:'"In conclusion,…"\n"To summarize,… / I believe that…"',es:'🇪🇸 "En conclusión…"\n"Para resumir… / Creo que…"',tts:'In conclusion... To summarize... I believe that...'},
+  ]},
+  interactive:{phrases:[
+    {meta:'Step 1/3 · 0–8s',name:'Direct answer — Respuesta directa',phrase:'"I think [opinion]."\n"I like [topic]." / "Yes, I agree."',es:'🇪🇸 "Yo creo…" / "Me gusta…"\n💡 Di tu opinión DE INMEDIATO. Sin introducciones.',tts:'I think... I like... Yes, I agree.'},
+    {meta:'Step 2/3 · 8–20s',name:'Reason — La razón',phrase:'"Because [reason]."\n"The reason is [explanation]."',es:'🇪🇸 "Porque…" / "La razón es…"\n💡 Una oración corta es suficiente.',tts:'Because... The reason is...'},
+    {meta:'Step 3/3 · 20–35s',name:'Personal example — Ejemplo',phrase:'"For example, [your example]."\n"In my country, [fact]."',es:'🇪🇸 "Por ejemplo…" / "En mi país…"\n💡 Usa tu propia vida. Es lo más fácil de recordar.',tts:'For example... In my country...'},
+  ]},
+};
+
+let drillType='photo',drillIdx=0,drillResults=[],drillLeft=0,drillSessionXP=0;
+
+function selectDrillType(type,el){
+  drillType=type;drillIdx=0;drillResults=[];drillSessionXP=0;
+  clearInterval(drillIv);drillIv=null;
+  document.querySelectorAll('#drill-type-tabs .tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderDrillCard();renderDrillDots();updateDrillXPLabel();
+  document.getElementById('drill-complete-wrap').style.display='none';
+  document.getElementById('drill-card-wrap').style.display='block';
+  document.getElementById('drill-next-btn').style.display='none';
+}
+function renderDrillCard(){
+  const data=DRILL_DATA[drillType];if(!data)return;
+  if(drillIdx>=data.phrases.length){showDrillComplete();return;}
+  const p=data.phrases[drillIdx];
+  document.getElementById('drill-meta').textContent=p.meta;
+  document.getElementById('drill-name').textContent=p.name;
+  document.getElementById('drill-phrase').textContent=p.phrase;
+  document.getElementById('drill-es').textContent=p.es;
+  document.getElementById('drill-countdown').textContent='—';
+  document.getElementById('drill-countdown').className='drill-countdown';
+  document.getElementById('drill-eval').classList.remove('show');
+  const sb=document.getElementById('drill-say-btn');
+  sb.disabled=false;sb.textContent='🎙 ¡Decirlo! (12s)';
+  document.getElementById('drill-next-btn').style.display='none';
+}
+function renderDrillDots(){
+  const data=DRILL_DATA[drillType];if(!data)return;
+  const c=document.getElementById('drill-dots');c.innerHTML='';
+  data.phrases.forEach((_,i)=>{
+    const d=document.createElement('div');
+    const st=i<drillIdx?(drillResults[i]?'done':'fail'):(i===drillIdx?'cur':'');
+    d.className='drill-dot'+(st?' '+st:'');d.textContent=i+1;c.appendChild(d);
+  });
+}
+function updateDrillXPLabel(){
+  const el=document.getElementById('drill-xp');
+  if(el)el.textContent='+'+drillSessionXP+' XP esta sesión';
+}
+function hearDrillPhrase(){
+  const data=DRILL_DATA[drillType];if(!data||!data.phrases[drillIdx])return;
+  speak(data.phrases[drillIdx].tts,null);
+}
+function startDrillCountdown(){
+  if(drillIv)return;
+  const data=DRILL_DATA[drillType];if(!data||!data.phrases[drillIdx])return;
+  drillLeft=12;
+  const cdEl=document.getElementById('drill-countdown');
+  const sb=document.getElementById('drill-say-btn');
+  sb.disabled=true;sb.textContent='⏱ Hablando…';
+  cdEl.textContent=drillLeft+'s';cdEl.className='drill-countdown';
+  speak(data.phrases[drillIdx].tts,null);
+  drillIv=setInterval(()=>{
+    drillLeft--;
+    cdEl.textContent=drillLeft>0?drillLeft+'s':'✓';
+    cdEl.className='drill-countdown'+(drillLeft<=3?' warn':'');
+    if(drillLeft<=0){
+      clearInterval(drillIv);drillIv=null;
+      document.getElementById('drill-eval').classList.add('show');
+    }
+  },1000);
+}
+function drillSelfEval(ok){
+  drillResults[drillIdx]=ok;
+  if(ok){drillSessionXP+=2;addXP(2);}
+  renderDrillDots();updateDrillXPLabel();
+  document.getElementById('drill-eval').classList.remove('show');
+  const sb=document.getElementById('drill-say-btn');
+  sb.disabled=false;sb.textContent='🎙 ¡Decirlo! (12s)';
+  document.getElementById('drill-next-btn').style.display='';
+}
+function nextDrillPhrase(){
+  const data=DRILL_DATA[drillType];if(!data)return;
+  drillIdx++;
+  if(drillIdx>=data.phrases.length){showDrillComplete();return;}
+  renderDrillCard();renderDrillDots();
+  document.getElementById('drill-next-btn').style.display='none';
+}
+function showDrillComplete(){
+  const data=DRILL_DATA[drillType];if(!data)return;
+  const total=data.phrases.length;
+  const done=drillResults.filter(Boolean).length;
+  document.getElementById('drill-card-wrap').style.display='none';
+  document.getElementById('drill-next-btn').style.display='none';
+  const cw=document.getElementById('drill-complete-wrap');cw.style.display='block';
+  document.getElementById('dc-trophy').textContent=done===total?'🏆':'⭐';
+  document.getElementById('dc-title').textContent=done===total?'¡Perfecto! All phrases mastered!':'Good job! '+done+'/'+total+' phrases correct';
+  document.getElementById('dc-sub').textContent='+'+drillSessionXP+' XP earned this drill · ¡Sigue así!';
+}
+function repeatDrill(){
+  drillIdx=0;drillResults=[];drillSessionXP=0;
+  clearInterval(drillIv);drillIv=null;
+  renderDrillCard();renderDrillDots();updateDrillXPLabel();
+  document.getElementById('drill-complete-wrap').style.display='none';
+  document.getElementById('drill-card-wrap').style.display='block';
+  document.getElementById('drill-next-btn').style.display='none';
+}
+
+// ─── WELCOME SCREEN ───
+function enterApp(){
+  const key=document.getElementById('wc-key-input').value.trim();
+  const err=document.getElementById('wc-err');
+  if(!key||!key.startsWith('sk-ant')){err.textContent='Ingresa una API key válida (comienza con sk-ant…)';return;}
+  err.textContent='';
+  localStorage.setItem('claude_api_key',key);
+  document.getElementById('welcome-screen').classList.add('hidden');
+  pingLMSStatus();
+}
+
+// ─── INIT ───
+window.addEventListener('load',()=>{
+  if(window.speechSynthesis)speechSynthesis.getVoices();
+  if(!localStorage.getItem('claude_api_key')){
+    document.getElementById('welcome-screen').classList.remove('hidden');
+  }else{
+    document.getElementById('welcome-screen').classList.add('hidden');
+  }
+  updateXPUI();
+  pingLMSStatus();
+  // try silent mic request
+  navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
+    micStream=s;micGranted.val=true;setupAnalyser();
+    document.querySelectorAll('.mic-btn').forEach(b=>b.classList.remove('disabled'));
+  }).catch(()=>{});
+});
+</script>
+</body>
+</html>
