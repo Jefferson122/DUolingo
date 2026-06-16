@@ -393,6 +393,27 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
 .shadow-compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:600px;margin-top:12px;display:none}
 .shadow-compare.show{display:grid}
 @media(max-width:500px){.shadow-compare{grid-template-columns:1fr}}
+
+/* ─── SHADOW SCORING ─── */
+.shadow-score-section{width:100%;max-width:600px;margin-top:14px;display:none}
+.shadow-score-section.show{display:block}
+.shadow-attempt-row{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.shadow-attempt-pill{font-size:.72rem;font-weight:900;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.shadow-attempt-pill.cur{background:rgba(28,176,246,.28);color:#7DD8F5;border:1.5px solid rgba(28,176,246,.4)}
+.shadow-attempt-pill.best{background:rgba(88,204,2,.22);color:#8EE668}
+.shadow-score-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.shadow-score-pct{font-size:1.6rem;font-weight:900;color:#fff;min-width:60px}
+.shadow-score-bar-track{flex:1;height:11px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden}
+.shadow-score-bar-fill{height:100%;border-radius:6px;width:0%;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.shadow-scored-text{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);border-radius:12px;padding:12px 16px;font-size:.9rem;font-weight:700;line-height:1.9;margin-bottom:12px}
+.shadow-scored-text .sw-ok{color:#8EE668}
+.shadow-scored-text .sw-miss{background:rgba(255,75,75,.3);border-radius:3px;padding:0 3px;color:#FFA0A0;font-weight:900;text-decoration:underline}
+.shadow-score-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.shadow-prac-btn{background:rgba(255,200,0,.15);border:1.5px solid rgba(255,200,0,.35);color:#FFE08A;border-radius:10px;padding:9px 18px;font:.82rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;transition:.2s}
+.shadow-prac-btn:hover:not(:disabled){background:rgba(255,200,0,.3)}
+.shadow-prac-btn:disabled{opacity:.5;cursor:not-allowed}
+.shadow-retry-btn{background:rgba(88,204,2,.15);border:1.5px solid rgba(88,204,2,.35);color:#8EE668;border-radius:10px;padding:9px 18px;font:.82rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;transition:.2s}
+.shadow-retry-btn:hover{background:rgba(88,204,2,.3)}
 .shadow-cmp-box{background:rgba(255,255,255,.07);border-radius:10px;padding:10px 13px;font-size:.76rem;font-weight:600;line-height:1.55;color:rgba(255,255,255,.8)}
 .shadow-cmp-label{font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.45);margin-bottom:5px}
 
@@ -1047,11 +1068,18 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
     <div class="shadow-btn-row">
       <button class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="hearImprovedInShadow()">🔊 Escuchar de nuevo</button>
       <button class="btn btn-g" id="shadow-rec-btn" onclick="startShadowRec()">🎙 Empezar a grabar</button>
-      <button class="btn btn-ghost btn-sm" id="shadow-compare-btn" style="display:none;color:#fff;border-color:rgba(255,255,255,.3)" onclick="showShadowCompare()">📊 Ver comparación</button>
     </div>
-    <div class="shadow-compare" id="shadow-compare">
-      <div class="shadow-cmp-box"><div class="shadow-cmp-label">✨ Versión mejorada</div><div id="shadow-cmp-improved"></div></div>
-      <div class="shadow-cmp-box"><div class="shadow-cmp-label">🎙 Lo que repetiste</div><div id="shadow-cmp-yours"></div></div>
+    <div class="shadow-score-section" id="shadow-score-section">
+      <div class="shadow-attempt-row" id="shadow-attempt-row"></div>
+      <div class="shadow-score-bar-row">
+        <span class="shadow-score-pct" id="shadow-score-pct">0%</span>
+        <div class="shadow-score-bar-track"><div class="shadow-score-bar-fill" id="shadow-score-bar-fill"></div></div>
+      </div>
+      <div class="shadow-scored-text" id="shadow-scored-text"></div>
+      <div class="shadow-score-btns">
+        <button class="shadow-prac-btn" id="shadow-prac-btn" onclick="practiceShadowErrors()" style="display:none">🎯 Practicar palabras difíciles</button>
+        <button class="shadow-retry-btn" onclick="retryShadowRec()">🔄 Intentar de nuevo</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1125,7 +1153,7 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
       <div class="pron-btn-row" style="margin-top:8px">
         <button class="pron-mic-btn" id="pron-full-mic" onclick="toggleFullRec()">🎙️</button>
         <button class="pron-next-btn" id="pron-retry-btn" onclick="retryFullRec()" style="display:none">🔄 Intentar de nuevo</button>
-        <button class="pron-next-btn" id="pron-full-done" onclick="closePronModal()" style="display:none;background:var(--g);box-shadow:0 4px 0 var(--gd)">✅ ¡Listo!</button>
+        <button class="pron-next-btn" id="pron-full-done" onclick="closePronModal()" style="display:none;background:var(--g);box-shadow:0 4px 0 var(--gd)">✅ Listo — volver a intentar</button>
       </div>
     </div>
   </div>
@@ -2367,22 +2395,21 @@ function hearImproved(){
 }
 
 // ════════════ SHADOWING MODE ════════════
-let shadowRecActive=false;
+let shadowRecActive=false,shadowAttempts=[],shadowBadWordsList=[],pronFromShadow=false;
 
 function openShadowing(){
   if(!improvedText)return;
   closeScore();
   const plain=improvedText.replace(/\*\*/g,'');
   document.getElementById('shadow-text').innerHTML=markupImproved(improvedText);
-  document.getElementById('shadow-cmp-improved').textContent=plain;
   document.getElementById('shadow-transcript').textContent='Tu respuesta aparecerá aquí…';
-  document.getElementById('shadow-compare').classList.remove('show');
-  document.getElementById('shadow-compare-btn').style.display='none';
+  document.getElementById('shadow-score-section').classList.remove('show');
+  document.getElementById('shadow-score-bar-fill').style.width='0%';
   document.getElementById('shadow-rec-btn').textContent='🎙 Grabar mi respuesta';
   document.getElementById('shadow-rec-btn').onclick=startShadowRec;
   document.getElementById('shadow-mic').className=micGranted.val?'mic-btn':'mic-btn disabled';
   document.getElementById('shadow-pulse').classList.remove('active');
-  shadowRecActive=false;
+  shadowRecActive=false;shadowAttempts=[];shadowBadWordsList=[];
   document.getElementById('shadow-modal').classList.add('open');
   document.getElementById('shadow-status').textContent='🔊 Escucha cómo suena la versión mejorada…';
   speak(plain,()=>{
@@ -2437,17 +2464,94 @@ function stopShadowRec(){
   stopRec();stopRecognition();shadowRecActive=false;
   document.getElementById('shadow-mic').className='mic-btn disabled';
   document.getElementById('shadow-pulse').classList.remove('active');
-  document.getElementById('shadow-status').textContent='✅ Listo — compara tu versión con la mejorada';
-  document.getElementById('shadow-rec-btn').textContent='🔄 Grabar de nuevo';
+  document.getElementById('shadow-rec-btn').textContent='🎙 Grabar de nuevo';
   document.getElementById('shadow-rec-btn').onclick=startShadowRec;
-  document.getElementById('shadow-compare-btn').style.display='';
+  evalShadowAttempt();
 }
 
-function showShadowCompare(){
-  const yours=document.getElementById('shadow-transcript').textContent.trim();
-  document.getElementById('shadow-cmp-yours').textContent=yours||'(sin transcripción)';
-  document.getElementById('shadow-compare').classList.add('show');
-  document.getElementById('shadow-compare-btn').style.display='none';
+function evalShadowAttempt(){
+  const heard=((recognition?.transcript_final)||'').toLowerCase().replace(/[^a-z\s]/g,'').trim();
+  const heardWords=heard.split(/\s+/).filter(Boolean);
+  const plain=improvedText.replace(/\*\*/g,'');
+  const displayWords=plain.split(/\s+/);
+  const targetWords=displayWords.map(w=>w.toLowerCase().replace(/[^a-z]/g,''));
+  let correct=0;const badWords=[];
+  const html=displayWords.map((w,i)=>{
+    const wc=targetWords[i];if(!wc)return`<span class="sw-ok">${w}</span>`;
+    const hit=heardWords.some(h=>h===wc||levenshtein(h,wc)<=1);
+    if(hit){correct++;return`<span class="sw-ok">${w}</span>`;}
+    else{badWords.push(wc);return`<span class="sw-miss">${w}</span>`;}
+  }).join(' ');
+  const total=targetWords.filter(Boolean).length;
+  const pct=total>0?Math.round(correct/total*100):0;
+  shadowAttempts.push(pct);
+  shadowBadWordsList=[...new Set(badWords)].slice(0,6);
+  // Attempt pills
+  const bestPct=Math.max(...shadowAttempts);
+  const attHtml=shadowAttempts.map((p,i)=>{
+    const isCur=i===shadowAttempts.length-1;
+    const isBest=p===bestPct&&i===shadowAttempts.lastIndexOf(bestPct)&&shadowAttempts.length>1;
+    return`<span class="shadow-attempt-pill${isCur?' cur':isBest?' best':''}">${shadowAttempts.length>1?`Intento ${i+1}: `:``}${p}%${isBest?' ⭐':''}</span>`;
+  }).join('');
+  document.getElementById('shadow-attempt-row').innerHTML=attHtml;
+  // Score bar
+  document.getElementById('shadow-score-pct').textContent=pct+'%';
+  const fill=document.getElementById('shadow-score-bar-fill');
+  fill.style.background=pct>=80?'#58CC02':pct>=60?'#FFC800':'#FF4B4B';
+  setTimeout(()=>fill.style.width=pct+'%',40);
+  // Scored text
+  document.getElementById('shadow-scored-text').innerHTML=
+    (heard?html:'<span style="color:rgba(255,255,255,.4)">No se detectó voz — habla más cerca del micrófono</span>');
+  // Practice button
+  const pracBtn=document.getElementById('shadow-prac-btn');
+  if(shadowBadWordsList.length>0&&heard){
+    pracBtn.style.display='';
+    pracBtn.textContent=`🎯 Practicar ${shadowBadWordsList.length} palabra${shadowBadWordsList.length>1?'s':''} en rojo`;
+  }else{pracBtn.style.display='none';}
+  // Status
+  const prev=shadowAttempts.length>1?shadowAttempts[shadowAttempts.length-2]:null;
+  const improvement=prev!==null?pct-prev:null;
+  let statusMsg='';
+  if(!heard)statusMsg='❓ No se detectó voz — intenta de nuevo';
+  else if(pct>=90)statusMsg='🎉 ¡Excelente! Pronunciación muy buena.';
+  else if(improvement!==null&&improvement>0)statusMsg=`📈 +${improvement}% de mejora — ¡sigue así!`;
+  else if(pct>=70)statusMsg='👍 Bien hecho — practica las palabras en rojo e intenta de nuevo';
+  else statusMsg='💪 Escucha de nuevo y repite — puedes mejorar';
+  document.getElementById('shadow-status').textContent=statusMsg;
+  document.getElementById('shadow-score-section').classList.add('show');
+}
+
+function retryShadowRec(){
+  document.getElementById('shadow-score-section').classList.remove('show');
+  document.getElementById('shadow-score-bar-fill').style.width='0%';
+  document.getElementById('shadow-status').textContent='🔄 Intento '+(shadowAttempts.length+1)+' — presiona Grabar cuando estés listo';
+  document.getElementById('shadow-transcript').textContent='Tu respuesta aparecerá aquí…';
+  startShadowRec();
+}
+
+async function practiceShadowErrors(){
+  if(!shadowBadWordsList.length)return;
+  const btn=document.getElementById('shadow-prac-btn');
+  btn.disabled=true;btn.textContent='⏳ Analizando palabras…';
+  const words=shadowBadWordsList.slice(0,5);
+  try{
+    const sysP=`You are a pronunciation coach for a Spanish speaker learning English. For each word given, return phonetic transcription and a short tip in Spanish.
+Return ONLY a JSON array, no explanation:
+[{"word":"example","phonetic":"eg-ZAM-pl","tip":"La 'x' suena como 'gz', pon énfasis en la segunda sílaba"}]
+Rules: tip max 12 words, in Spanish, practical phonetic advice for Spanish speakers.`;
+    const raw=getAIMode()==='claude'
+      ?await callClaudeAPI([{role:'system',content:sysP},{role:'user',content:`Words to analyze: ${words.join(', ')}`}])
+      :await callLMStudio([{role:'system',content:sysP},{role:'user',content:`Words to analyze: ${words.join(', ')}`}]);
+    const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    btn.disabled=false;btn.textContent=`🎯 Practicar palabras en rojo`;
+    pronFromShadow=true;
+    openPronModal(parsed);
+  }catch(e){
+    const fallback=words.map(w=>({word:w,phonetic:w.toUpperCase(),tip:'Repite esta palabra lentamente, sílaba por sílaba'}));
+    btn.disabled=false;btn.textContent=`🎯 Practicar palabras en rojo`;
+    pronFromShadow=true;
+    openPronModal(fallback);
+  }
 }
 
 function toggleShadowRec(){
@@ -2488,6 +2592,7 @@ function openPronModal(words){
   document.getElementById('pron-modal').classList.add('open');
   document.getElementById('pron-word-phase').style.display='';
   document.getElementById('pron-sentence-phase').style.display='none';
+  document.getElementById('pron-full-done').textContent=pronFromShadow?'✅ Listo — volver a intentar':'✅ ¡Listo!';
   buildPronDots();
   showPronWord(0);
 }
@@ -2496,6 +2601,13 @@ function closePronModal(){
   if(pronRecActive)stopPronRec(true);
   if(pronFullRecActive)stopFullRec(true);
   document.getElementById('pron-modal').classList.remove('open');
+  if(pronFromShadow){
+    pronFromShadow=false;
+    document.getElementById('shadow-status').textContent='💪 ¡Bien practicado! Ahora intenta decir la oración completa de nuevo.';
+    document.getElementById('shadow-score-section').classList.remove('show');
+    document.getElementById('shadow-score-bar-fill').style.width='0%';
+    document.getElementById('shadow-transcript').textContent='Tu respuesta aparecerá aquí…';
+  }
 }
 
 function buildPronDots(){
@@ -2589,6 +2701,8 @@ function nextPronWord(){
     document.getElementById('pron-word-phase').style.display='none';
     document.getElementById('pron-sentence-phase').style.display='';
     const plain=improvedText.replace(/\*\*/g,'');
+    const sentPhaseLabel=document.querySelector('#pron-sentence-phase .pron-card>div');
+    if(sentPhaseLabel)sentPhaseLabel.textContent=pronFromShadow?'¡Palabras practicadas! Ahora di la oración completa':'¡Palabras dominadas! Ahora lee la oración completa';
     document.getElementById('pron-full-sentence').innerHTML=markupImproved(improvedText);
     document.getElementById('pron-full-status').textContent='Presiona Grabar y lee la oración en voz alta';
     document.getElementById('pron-full-result').textContent='';
