@@ -359,6 +359,62 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
 .card.drill-card::after{background:var(--y)}
 .card.drill-card:hover{border-color:var(--y)}
 
+/* ─── C1 STRUCTURES DRILL ─── */
+#c1-cat-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.c1-cat-btn{padding:6px 14px;border-radius:20px;border:2px solid var(--br);background:var(--w);font:.76rem/1 'Nunito',sans-serif;font-weight:800;cursor:pointer;color:var(--tm);transition:.18s;white-space:nowrap}
+.c1-cat-btn[data-cat=all].active{background:#555;border-color:#444;color:#fff}
+.c1-cat-btn[data-cat=e].active{background:var(--b);border-color:var(--bd);color:#fff}
+.c1-cat-btn[data-cat=c].active{background:var(--y);border-color:var(--yd);color:#5C3D00}
+.c1-cat-btn[data-cat=o].active{background:#9B59B6;border-color:#7D3C98;color:#fff}
+.c1-outer{background:var(--w);border:2px solid var(--br);border-radius:20px;overflow:hidden;box-shadow:var(--sh);margin-bottom:18px}
+.c1-hdr{padding:13px 18px;display:flex;align-items:center;gap:8px}
+.c1-hdr.he{background:linear-gradient(135deg,var(--bl),#E8F5FF)}
+.c1-hdr.hc{background:linear-gradient(135deg,var(--yl),#FFFDE4)}
+.c1-hdr.ho{background:linear-gradient(135deg,#F3E8FF,#EDE0FF)}
+.c1-badge{font-size:.62rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:3px 11px;border-radius:20px}
+.c1-badge.be{background:var(--bl);color:var(--bd)}.c1-badge.bc{background:var(--yl);color:var(--yd)}.c1-badge.bo{background:#EDE0FF;color:#7B2FBE}
+.c1-hdr-num{margin-left:auto;font-size:.7rem;font-weight:900;color:var(--tm)}
+.c1-body{padding:18px 20px}
+.c1-patt{font-size:1.05rem;font-weight:900;color:var(--t);line-height:1.65;background:var(--bg);border-left:4px solid var(--b);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:12px}
+.c1-patt.pc{border-left-color:var(--y)}.c1-patt.po{border-left-color:#9B59B6}
+.c1-patt em{font-style:normal;font-weight:800;color:var(--b)}.c1-patt.pc em{color:var(--yd)}.c1-patt.po em{color:#9B59B6}
+.c1-ex{font-size:.82rem;font-weight:600;color:#7A5F00;background:var(--yl);border-radius:10px;padding:10px 14px;margin-bottom:10px;line-height:1.55}
+.c1-pron-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.c1-pron-lbl{font-size:.66rem;font-weight:900;color:var(--tm);white-space:nowrap}
+.c1-pron-chip{font-size:.69rem;font-weight:800;padding:3px 9px;border-radius:12px;background:var(--bl);color:var(--bd);cursor:pointer;border:none;font-family:'Nunito',sans-serif;transition:.15s}
+.c1-pron-chip:hover{background:var(--b);color:#fff}
+.c1-topics{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.c1-tlbl{font-size:.68rem;font-weight:900;color:var(--tm);white-space:nowrap}
+.c1-tchip{font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:20px;background:var(--bg);border:1.5px solid var(--br);color:var(--tm);cursor:pointer;transition:.15s;font-family:'Nunito',sans-serif}
+.c1-tchip:hover,.c1-tchip.on{border-color:var(--b);color:var(--b);background:var(--bl)}
+.c1-tbox{width:100%;min-height:50px;background:var(--bg);border:1.5px solid var(--br);border-radius:10px;padding:9px 13px;font-size:.81rem;font-weight:600;color:var(--tl);line-height:1.5;display:none;margin-bottom:10px}
+.c1-tbox.on{display:block}
+.c1-cd{font-size:2.2rem;font-weight:900;color:var(--g);text-align:center;min-height:48px;display:flex;align-items:center;justify-content:center;margin:6px 0;transition:.2s;gap:8px}
+.c1-cd.warn{color:var(--r)}.c1-cd.eval{font-size:.88rem;color:var(--b)}
+.c1-res{display:none;background:var(--bg);border-radius:14px;padding:15px;margin-top:10px}
+.c1-res.on{display:block}
+.c1-res-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.c1-sco{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;color:#fff;flex-shrink:0}
+.c1-sco.sg{background:linear-gradient(135deg,#46A302,#58CC02)}.c1-sco.sb{background:linear-gradient(135deg,#0092D1,#1CB0F6)}
+.c1-sco.sy{background:linear-gradient(135deg,#C89800,#FFC800);color:#5C3D00}.c1-sco.sr{background:linear-gradient(135deg,#B83030,#FF4B4B)}
+.c1-res-lbl{font-size:.88rem;font-weight:900}.c1-res-lbl.lg{color:var(--gd)}.c1-res-lbl.lb{color:var(--bd)}.c1-res-lbl.ly{color:var(--yd)}.c1-res-lbl.lr{color:var(--r)}
+.c1-res-sub{font-size:.72rem;font-weight:700;color:var(--tm);margin-top:2px}
+.c1-qbox{font-size:.79rem;font-weight:700;color:var(--t);font-style:italic;line-height:1.55;background:var(--w);border-radius:8px;padding:8px 12px;border-left:3px solid var(--g);margin-bottom:8px}
+.c1-qbox.miss{border-left-color:var(--r);color:var(--tl)}
+.c1-tipbox{font-size:.79rem;font-weight:700;color:#7A5F00;background:var(--yl);border-radius:8px;padding:8px 12px;line-height:1.5;margin-bottom:6px}
+.c1-coachbox{font-size:.82rem;font-weight:700;color:#1a3d6b;background:linear-gradient(135deg,#e8f4ff,#d4eaff);border-radius:8px;padding:9px 13px;line-height:1.55;margin-bottom:6px;border-left:3px solid var(--b)}
+.c1-altbox{font-size:.79rem;font-weight:700;color:#5c2d91;background:#f3e8ff;border-radius:8px;padding:8px 12px;line-height:1.5;margin-bottom:6px;border-left:3px solid #9b59b6}
+.c1-pronbox{font-size:.78rem;font-weight:700;color:var(--bd);background:var(--bl);border-radius:8px;padding:8px 12px;line-height:1.55}
+.c1-pronbox strong{font-weight:900;color:var(--b)}
+.c1-seval{display:none;gap:10px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.c1-seval.on{display:flex}
+.c1-pdots{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+.c1-pdot{width:22px;height:22px;border-radius:50%;border:2px solid var(--br);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;background:var(--bg);color:var(--tm);transition:.25s}
+.c1-pdot.done{background:var(--g);border-color:var(--gd);color:#fff}
+.c1-pdot.fail{background:var(--r);border-color:#B83030;color:#fff}
+.c1-pdot.part{background:var(--b);border-color:var(--bd);color:#fff}
+.c1-pdot.cur{background:var(--y);border-color:var(--yd);color:#5C3D00;transform:scale(1.15)}
+
 /* ─── AI IMPROVE SECTION (in score modal) ─── */
 .sc-ai-btn-wrap{margin:12px 0 4px;display:flex;justify-content:center}
 .btn-ai{background:linear-gradient(135deg,#6F42FF,var(--b));color:#fff;box-shadow:0 4px 0 #4B22CC;border:none;padding:11px 22px;border-radius:12px;cursor:pointer;font:.88rem/1 'Nunito',sans-serif;font-weight:800;display:inline-flex;align-items:center;gap:7px;transition:.18s}
@@ -602,9 +658,9 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
     <div class="card drill-card" onclick="goTo('drill')">
       <div class="card-ico">⚡</div>
       <div class="card-title">Template Drill</div>
-      <div class="card-desc">Practica cada frase del template paso a paso. Escucha → Di → Autoevalúa. ¡La forma más rápida de memorizar!</div>
-      <span class="card-tag new">+2 XP por frase · 4 templates</span>
-      <div class="card-stat"><span>18</span> frases · memorización rápida</div>
+      <div class="card-desc">15 estructuras C1 con evaluación IA + templates de foto, sample y más. Graba → Claude evalúa → Mejora tu pronunciación.</div>
+      <span class="card-tag new">⭐ C1 · IA · Pronunciación</span>
+      <div class="card-stat"><span>15</span> C1 structures · <span>18</span> template phrases</div>
     </div>
   </div>
 </div>
@@ -964,6 +1020,7 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
     <button class="tab" onclick="selectDrillType('read',this)">📖 Leer+Hablar</button>
     <button class="tab" onclick="selectDrillType('sample',this)">🎤 Sample</button>
     <button class="tab" onclick="selectDrillType('interactive',this)">🤖 IS (35s)</button>
+    <button class="tab" onclick="selectDrillType('c1',this)" style="background:linear-gradient(135deg,#EDE0FF,#DDF4FF);border-color:#C5A9F5;color:#7B2FBE">⭐ C1 Estructuras</button>
   </div>
 
   <div class="drill-progress-wrap">
@@ -1001,6 +1058,79 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
     <div class="btn-row" style="justify-content:center">
       <button class="btn btn-ghost" onclick="repeatDrill()">🔄 Repetir drill</button>
       <button class="btn btn-g" onclick="goHome()">→ Practicar respuestas completas</button>
+    </div>
+  </div>
+
+  <!-- ═══ C1 STRUCTURES DRILL ═══ -->
+  <div id="c1-drill-wrap" style="display:none">
+    <div id="c1-cat-tabs">
+      <button class="c1-cat-btn active" data-cat="all" onclick="c1SetCat('all',this)">Todas · 15</button>
+      <button class="c1-cat-btn" data-cat="e" onclick="c1SetCat('e',this)">⭐ ÉNFASIS · 5</button>
+      <button class="c1-cat-btn" data-cat="c" onclick="c1SetCat('c',this)">↔ CONTRASTE · 5</button>
+      <button class="c1-cat-btn" data-cat="o" onclick="c1SetCat('o',this)">💬 OPINIÓN · 5</button>
+    </div>
+    <div class="drill-progress-wrap">
+      <div class="c1-pdots" id="c1-dots"></div>
+      <span id="c1-xp-lbl" style="font-size:.76rem;font-weight:900;color:var(--g);white-space:nowrap">+0 XP</span>
+    </div>
+    <div id="c1-card-wrap">
+      <div class="c1-outer">
+        <div class="c1-hdr he" id="c1-hdr">
+          <span class="c1-badge be" id="c1-badge">ÉNFASIS</span>
+          <span class="c1-hdr-num" id="c1-num">#1 / 15</span>
+        </div>
+        <div class="c1-body">
+          <div class="c1-patt" id="c1-patt"></div>
+          <div class="c1-ex" id="c1-ex"></div>
+          <div class="c1-pron-row">
+            <span class="c1-pron-lbl">🔊 Pronunciar:</span>
+            <span id="c1-pron-chips"></span>
+          </div>
+          <div class="c1-topics">
+            <span class="c1-tlbl">Habla sobre:</span>
+            <span id="c1-topic-chips"></span>
+          </div>
+          <div class="c1-tbox" id="c1-tbox">Tu respuesta aparecerá aquí…</div>
+          <div class="c1-cd" id="c1-cd">—</div>
+          <div class="btn-row" style="margin-bottom:10px">
+            <button class="btn btn-ghost btn-sm" onclick="c1Hear()">🔊 Solo escuchar</button>
+            <button class="btn btn-g" id="c1-rec-btn" onclick="c1StartRec()">🎙 Practicar (15s)</button>
+          </div>
+          <div class="c1-res" id="c1-res">
+            <div class="c1-res-row">
+              <div class="c1-sco sg" id="c1-sco">—</div>
+              <div>
+                <div class="c1-res-lbl lg" id="c1-res-lbl">—</div>
+                <div class="c1-res-sub" id="c1-res-sub">—</div>
+              </div>
+            </div>
+            <div class="c1-qbox" id="c1-qbox"></div>
+            <div class="c1-tipbox" id="c1-tipbox"></div>
+            <div class="c1-coachbox" id="c1-coachbox" style="display:none"></div>
+            <div class="c1-altbox" id="c1-altbox" style="display:none"></div>
+            <div class="c1-pronbox" id="c1-pronbox" style="display:none"></div>
+          </div>
+          <div class="c1-seval" id="c1-seval">
+            <p style="font-size:.8rem;font-weight:800;color:var(--t);width:100%;text-align:center;margin-bottom:4px">¿Usaste la estructura? (modo offline)</p>
+            <button class="se-btn se-ok" onclick="c1SelfEval(true)">✓ Sí, la usé bien</button>
+            <button class="se-btn se-fail" onclick="c1SelfEval(false)">✗ Necesito más práctica</button>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-sm" onclick="goHome()">← Volver</button>
+        <button class="btn btn-b" id="c1-next-btn" onclick="c1Next()" style="display:none">Siguiente estructura →</button>
+      </div>
+    </div>
+    <div class="drill-complete-wrap" id="c1-complete-wrap" style="display:none">
+      <div class="trophy" id="c1-trophy">🏆</div>
+      <h3 id="c1-complete-title">¡Estructuras C1 completadas!</h3>
+      <p id="c1-complete-sub">+0 XP ganados</p>
+      <div id="c1-belt-summary" style="background:var(--bg);border-radius:12px;padding:12px 14px;margin:10px 0 14px;text-align:left;font-size:.75rem;font-weight:700;color:var(--t);line-height:1.8"></div>
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn btn-ghost" onclick="c1Repeat()">🔄 Repetir</button>
+        <button class="btn btn-g" onclick="goHome()">→ Practicar respuestas completas</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1385,6 +1515,7 @@ function goTo(mod){
     clearInterval(drillIv);drillIv=null;
     document.querySelectorAll('#drill-type-tabs .tab').forEach((t,i)=>t.classList.toggle('active',i===0));
     document.getElementById('drill-complete-wrap').style.display='none';
+    document.getElementById('c1-drill-wrap').style.display='none';
     document.getElementById('drill-card-wrap').style.display='block';
     renderDrillCard();renderDrillDots();updateDrillXPLabel();
   }
@@ -3185,9 +3316,12 @@ function selectDrillType(type,el){
   clearInterval(drillIv);drillIv=null;
   document.querySelectorAll('#drill-type-tabs .tab').forEach(t=>t.classList.remove('active'));
   if(el)el.classList.add('active');
-  renderDrillCard();renderDrillDots();updateDrillXPLabel();
+  const isC1=type==='c1';
+  document.getElementById('c1-drill-wrap').style.display=isC1?'block':'none';
+  document.getElementById('drill-card-wrap').style.display=isC1?'none':'block';
   document.getElementById('drill-complete-wrap').style.display='none';
-  document.getElementById('drill-card-wrap').style.display='block';
+  if(isC1){c1Init();return;}
+  renderDrillCard();renderDrillDots();updateDrillXPLabel();
   document.getElementById('drill-next-btn').style.display='none';
 }
 function renderDrillCard(){
@@ -3275,6 +3409,340 @@ function repeatDrill(){
   document.getElementById('drill-complete-wrap').style.display='none';
   document.getElementById('drill-card-wrap').style.display='block';
   document.getElementById('drill-next-btn').style.display='none';
+}
+
+// ════════════ C1 STRUCTURES DRILL ════════════
+const C1_DATA=[
+  {id:1,key:'e',cat:'ÉNFASIS',pattern:'What I find most [ADJ] is [CLAUSE]',ex:'"What I find most impressive is how technology connects people worldwide."',topics:['Technology','Education','Society'],tts:'What I find most impressive is how technology connects people worldwide.',pron:[{w:'impressive',ph:'/ɪmˈprɛsɪv/'},{w:'worldwide',ph:'/ˈwɜːldwaɪd/'}]},
+  {id:2,key:'e',cat:'ÉNFASIS',pattern:'Not only does [X], but it also [Y]',ex:'"Not only does education improve skills, but it also builds confidence."',topics:['Education','Health','Work'],tts:'Not only does education improve skills, but it also builds confidence.',pron:[{w:'confidence',ph:'/ˈkɒnfɪdəns/'}]},
+  {id:3,key:'e',cat:'ÉNFASIS',pattern:'It is precisely because of [X] that [Y]',ex:'"It is precisely because of this that we need better solutions."',topics:['Environment','Society','Technology'],tts:'It is precisely because of this that we need better solutions.',pron:[{w:'precisely',ph:'/prɪˈsaɪsli/'},{w:'solutions',ph:'/səˈluːʃənz/'}]},
+  {id:4,key:'e',cat:'ÉNFASIS',pattern:'The fact that [CLAUSE] shows [RESULT]',ex:'"The fact that cities keep growing shows how people value opportunities."',topics:['Cities','Migration','Economy'],tts:'The fact that cities keep growing shows how people value opportunities.',pron:[{w:'opportunities',ph:'/ˌɒpəˈtjuːnɪtɪz/'}]},
+  {id:5,key:'e',cat:'ÉNFASIS',pattern:'What makes this [NOUN] is [REASON]',ex:'"What makes this topic relevant is its impact on everyday life."',topics:['Any topic','Education','Environment'],tts:'What makes this topic relevant is its impact on everyday life.',pron:[{w:'relevant',ph:'/ˈrɛlɪvənt/'},{w:'impact',ph:'/ˈɪmpækt/'}]},
+  {id:6,key:'c',cat:'CONTRASTE',pattern:'While it is true that [X], it cannot be denied that [Y]',ex:'"While it is true that technology saves time, it cannot be denied that it creates distractions."',topics:['Technology','Social media','Work'],tts:'While it is true that technology saves time, it cannot be denied that it creates distractions.',pron:[{w:'denied',ph:'/dɪˈnaɪd/'},{w:'distractions',ph:'/dɪˈstrækʃənz/'}]},
+  {id:7,key:'c',cat:'CONTRASTE',pattern:'Even though [X], I still believe [Y]',ex:'"Even though remote work has challenges, I still believe it improves quality of life."',topics:['Remote work','Lifestyle','Education'],tts:'Even though remote work has challenges, I still believe it improves quality of life.',pron:[{w:'challenges',ph:'/ˈtʃælɪndʒɪz/'},{w:'quality',ph:'/ˈkwɒlɪti/'}]},
+  {id:8,key:'c',cat:'CONTRASTE',pattern:'Despite the fact that [X], [RESULT]',ex:'"Despite the fact that change is difficult, it is often necessary."',topics:['Change','Society','Environment'],tts:'Despite the fact that change is difficult, it is often necessary.',pron:[{w:'despite',ph:'/dɪˈspaɪt/'},{w:'necessary',ph:'/ˈnɛsɪsɛri/'}]},
+  {id:9,key:'c',cat:'CONTRASTE',pattern:'Whereas [X], in contrast, [Y]',ex:'"Whereas cities offer opportunities, in contrast, rural areas provide peace."',topics:['Cities vs rural','Lifestyle','Work'],tts:'Whereas cities offer opportunities, in contrast, rural areas provide peace.',pron:[{w:'whereas',ph:'/wɛrˈæz/'},{w:'contrast',ph:'/ˈkɒntrɑːst/'}]},
+  {id:10,key:'c',cat:'CONTRASTE',pattern:'Although [X], it is clear that [Y]',ex:'"Although opinions differ, it is clear that education matters."',topics:['Education','Society','Politics'],tts:'Although opinions differ, it is clear that education matters.',pron:[{w:'although',ph:'/ɔːlˈðəʊ/'},{w:'opinions',ph:'/əˈpɪnjənz/'}]},
+  {id:11,key:'o',cat:'OPINIÓN',pattern:'I am inclined to think that [OPINION]',ex:'"I am inclined to think that collaboration leads to better results."',topics:['Work','Education','Leadership'],tts:'I am inclined to think that collaboration leads to better results.',pron:[{w:'inclined',ph:'/ɪnˈklaɪnd/'},{w:'collaboration',ph:'/kəˌlæbəˈreɪʃən/'}]},
+  {id:12,key:'o',cat:'OPINIÓN',pattern:'It is worth noting that [IMPORTANT FACT]',ex:'"It is worth noting that small habits can create significant change."',topics:['Health','Productivity','Society'],tts:'It is worth noting that small habits can create significant change.',pron:[{w:'worth',ph:'/wɜːθ/'},{w:'significant',ph:'/sɪɡˈnɪfɪkənt/'}]},
+  {id:13,key:'o',cat:'OPINIÓN',pattern:'I would argue that [STRONG OPINION]',ex:'"I would argue that critical thinking is the most valuable skill today."',topics:['Education','Skills','Technology'],tts:'I would argue that critical thinking is the most valuable skill today.',pron:[{w:'argue',ph:'/ˈɑːɡjuː/'},{w:'valuable',ph:'/ˈvæljuəbl/'}]},
+  {id:14,key:'o',cat:'OPINIÓN',pattern:'There is little doubt that [FACT]',ex:'"There is little doubt that climate change affects all of us."',topics:['Environment','Science','Society'],tts:'There is little doubt that climate change affects all of us.',pron:[{w:'doubt',ph:'/daʊt/'},{w:'climate',ph:'/ˈklaɪmɪt/'}]},
+  {id:15,key:'o',cat:'OPINIÓN',pattern:'From my perspective, what matters most is [VALUE]',ex:'"From my perspective, what matters most is finding a balance between work and personal life."',topics:['Lifestyle','Values','Work-life balance'],tts:'From my perspective, what matters most is finding a balance between work and personal life.',pron:[{w:'perspective',ph:'/pəˈspɛktɪv/'},{w:'balance',ph:'/ˈbæləns/'}]},
+];
+const C1_MAP={e:{bdg:'be',hdr:'he',pc:''},c:{bdg:'bc',hdr:'hc',pc:'pc'},o:{bdg:'bo',hdr:'ho',pc:'po'}};
+let c1={cat:'all',list:[...C1_DATA],idx:0,results:{},xp:0,recIv:null,recLeft:0,recog:null,recActive:false};
+
+function c1Init(){
+  c1.idx=0;c1.results={};c1.xp=0;c1.list=[...C1_DATA];c1.cat='all';
+  document.querySelectorAll('.c1-cat-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('c1-complete-wrap').style.display='none';
+  document.getElementById('c1-card-wrap').style.display='block';
+  c1RenderDots();c1RenderCard();
+}
+
+function c1SetCat(cat,btn){
+  c1.cat=cat;
+  document.querySelectorAll('.c1-cat-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  c1.list=cat==='all'?[...C1_DATA]:C1_DATA.filter(s=>s.key===cat);
+  c1.idx=0;c1.results={};c1.xp=0;
+  document.getElementById('c1-xp-lbl').textContent='+0 XP';
+  document.getElementById('c1-complete-wrap').style.display='none';
+  document.getElementById('c1-card-wrap').style.display='block';
+  c1RenderDots();c1RenderCard();
+}
+
+function c1RenderDots(){
+  const c=document.getElementById('c1-dots');if(!c)return;
+  c.innerHTML='';
+  c1.list.forEach((s,i)=>{
+    const r=c1.results[s.id];
+    let st=r!==undefined?(r>=70?'done':r>=40?'part':'fail'):(i===c1.idx?'cur':'');
+    const d=document.createElement('div');
+    d.className='c1-pdot'+(st?' '+st:'');d.textContent=s.id;
+    c.appendChild(d);
+  });
+}
+
+function c1RenderCard(){
+  const s=c1.list[c1.idx];if(!s){c1ShowComplete();return;}
+  const m=C1_MAP[s.key];
+  const hdr=document.getElementById('c1-hdr');hdr.className='c1-hdr '+m.hdr;
+  const bdg=document.getElementById('c1-badge');bdg.className='c1-badge '+m.bdg;bdg.textContent=s.cat;
+  document.getElementById('c1-num').textContent='#'+s.id+' de 15 · '+(c1.idx+1)+'/'+c1.list.length;
+  const patt=document.getElementById('c1-patt');
+  patt.className='c1-patt'+(m.pc?' '+m.pc:'');
+  patt.innerHTML=s.pattern.replace(/\[([^\]]+)\]/g,'<em>[$1]</em>');
+  document.getElementById('c1-ex').textContent='💡 '+s.ex;
+  const pc=document.getElementById('c1-pron-chips');pc.innerHTML='';
+  s.pron.forEach(p=>{
+    const b=document.createElement('button');b.className='c1-pron-chip';
+    b.textContent=p.w+' '+p.ph;b.onclick=()=>speak(p.w,null);
+    pc.appendChild(b);
+  });
+  const tc=document.getElementById('c1-topic-chips');tc.innerHTML='';
+  s.topics.forEach((t,i)=>{
+    const b=document.createElement('button');b.className='c1-tchip'+(i===0?' on':'');
+    b.textContent=t;
+    b.onclick=()=>{document.querySelectorAll('.c1-tchip').forEach(x=>x.classList.remove('on'));b.classList.add('on');};
+    tc.appendChild(b);
+  });
+  document.getElementById('c1-tbox').className='c1-tbox';
+  document.getElementById('c1-tbox').textContent='Tu respuesta aparecerá aquí…';
+  document.getElementById('c1-cd').textContent='—';document.getElementById('c1-cd').className='c1-cd';
+  document.getElementById('c1-res').className='c1-res';
+  document.getElementById('c1-seval').className='c1-seval';
+  document.getElementById('c1-pronbox').style.display='none';
+  const rb=document.getElementById('c1-rec-btn');
+  rb.disabled=false;rb.textContent='🎙 Practicar (15s)';rb.onclick=()=>c1StartRec();
+  document.getElementById('c1-next-btn').style.display='none';
+  document.getElementById('c1-xp-lbl').textContent='+'+c1.xp+' XP';
+}
+
+function c1Hear(){const s=c1.list[c1.idx];if(s)speak(s.tts,null);}
+
+function c1StartRec(){
+  if(c1.recIv)return;
+  const s=c1.list[c1.idx];if(!s)return;
+  const rb=document.getElementById('c1-rec-btn');
+  const cd=document.getElementById('c1-cd');
+  rb.disabled=true;rb.textContent='⏳ Escuchando ejemplo…';
+  cd.textContent='🔊 Escucha la estructura…';cd.className='c1-cd eval';
+  speak(s.tts,()=>{
+    document.getElementById('c1-tbox').className='c1-tbox on';
+    document.getElementById('c1-tbox').textContent='';
+    rb.disabled=false;rb.textContent='⏹ Detener grabación';rb.onclick=()=>c1StopRec();
+    c1.recLeft=15;
+    cd.textContent=c1.recLeft+'s';cd.className='c1-cd';
+    c1StartRecog();
+    c1.recIv=setInterval(()=>{
+      c1.recLeft--;
+      cd.textContent=c1.recLeft>0?c1.recLeft+'s':'✓';
+      cd.className='c1-cd'+(c1.recLeft<=4?' warn':'');
+      if(c1.recLeft<=0){clearInterval(c1.recIv);c1.recIv=null;c1StopRec();}
+    },1000);
+  });
+}
+
+function c1StopRec(){
+  clearInterval(c1.recIv);c1.recIv=null;
+  c1StopRecog();
+  const box=document.getElementById('c1-tbox');
+  const transcript=(box.innerHTML||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+  const cd=document.getElementById('c1-cd');
+  cd.innerHTML='<span style="display:inline-block;width:18px;height:18px;border:2.5px solid rgba(28,176,246,.3);border-top-color:var(--b);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0"></span> Claude evaluando tu respuesta…';
+  cd.className='c1-cd eval';
+  const rb=document.getElementById('c1-rec-btn');rb.disabled=true;rb.textContent='⏳ Evaluando con IA…';
+  c1EvalWithAI(transcript);
+}
+
+function c1StartRecog(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){c1.recog=null;return;}
+  if(c1.recog){try{c1.recog.stop();}catch(e){}}
+  c1.recog=new SR();
+  c1.recog.continuous=true;c1.recog.interimResults=true;c1.recog.lang='en-US';
+  let finalText='';
+  c1.recog.onresult=e=>{
+    let fin='',intr='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)fin+=e.results[i][0].transcript;
+      else intr+=e.results[i][0].transcript;
+    }
+    finalText+=fin;
+    const b=document.getElementById('c1-tbox');
+    if(b)b.innerHTML=finalText+'<span style="color:var(--tm)"> '+intr+'</span>';
+  };
+  try{c1.recog.start();c1.recActive=true;}catch(e){}
+}
+
+function c1StopRecog(){
+  if(c1.recog&&c1.recActive){try{c1.recog.stop();}catch(e){}c1.recActive=false;}
+}
+
+// ─── CINTURÓN DE HERRAMIENTAS ───
+function c1GetBelt(){
+  try{return JSON.parse(localStorage.getItem('c1_belt')||'{}');}
+  catch(e){return {};}
+}
+function c1UpdateBelt(id,action){
+  const belt=c1GetBelt();
+  belt[id]=action;
+  localStorage.setItem('c1_belt',JSON.stringify(belt));
+}
+function c1BeltContext(){
+  const belt=c1GetBelt();
+  const dominadas=C1_DATA.filter(s=>belt[s.id]==='DOMINADO').map(s=>`"${s.pattern.split('[')[0].trim()}"`).join(', ')||'ninguno aún';
+  const aprendiendo=C1_DATA.filter(s=>belt[s.id]==='APRENDIENDO').map(s=>`"${s.pattern.split('[')[0].trim()}"`).join(', ')||'ninguno';
+  const total=Object.keys(belt).length;
+  return `Dominados (${Object.values(belt).filter(v=>v==='DOMINADO').length}/15): ${dominadas}. En aprendizaje: ${aprendiendo}. Total intentados: ${total}/15.`;
+}
+
+async function c1EvalWithAI(transcript){
+  const s=c1.list[c1.idx];if(!s)return;
+  const hasAI=!!(localStorage.getItem('claude_api_key')&&localStorage.getItem('claude_api_key').length>20);
+  if(!hasAI||!transcript||transcript.length<4){
+    document.getElementById('c1-cd').textContent='—';document.getElementById('c1-cd').className='c1-cd';
+    document.getElementById('c1-seval').className='c1-seval on';
+    const rb=document.getElementById('c1-rec-btn');rb.disabled=false;rb.textContent='🎙 Practicar (15s)';rb.onclick=()=>c1StartRec();
+    return;
+  }
+  try{
+    const belt=c1GetBelt();
+    const beltStatus=belt[s.id]||'SIN PROBAR';
+    const sys=`Eres el Arquitecto de Discurso — coach élite del Duolingo English Test (DET) especializado en estructuras C1. Tu metodología tiene 4 pilares:
+
+1. CINTURÓN DE HERRAMIENTAS (Progresivo): Cada conector tiene un estado acumulativo — SIN PROBAR → PROBANDO → APRENDIENDO → DOMINADO. Solo avanza un nivel por intento si el uso es genuino y natural.
+2. FILTRO DE PRONUNCIACIÓN: Evalúa si el conector C1 es fonéticamente difícil para hispanohablantes. Si traba la fluidez, propón una alternativa igualmente sofisticada pero más suave de pronunciar.
+3. PRUEBA DE FUEGO: Evalúa naturalidad y fluidez espontánea — no basta usar la estructura mecánicamente; debe sonar a hablante nativo profesional en contexto real.
+4. REFINAMIENTO: Tu feedback es preciso, motivador y concreto — como un coach de élite que ve exactamente lo que falta o lo que brilló.
+
+Regla de oro: prioriza siempre la fluidez. Un conector que suena "libro de texto" vale menos que uno natural y contextualizado.
+Responde ÚNICAMENTE con JSON compacto válido, sin markdown, sin texto extra.`;
+
+    const usr=`CONECTOR C1 [${s.cat}]: ${s.pattern}
+Ejemplo modelo: ${s.ex}
+Pronunciación clave: ${s.pron.map(p=>p.w+' '+p.ph).join(', ')}
+
+CINTURÓN DE HERRAMIENTAS:
+Estado actual de este conector: ${beltStatus}
+${c1BeltContext()}
+
+El estudiante dijo: "${transcript}"
+
+Responde con este JSON exacto:
+{
+  "score": 0-100,
+  "used": true/false,
+  "quote": "frase exacta del estudiante con el conector (vacío si no lo usó)",
+  "tip": "consejo de mejora en español, máx 20 palabras, estilo coach nativo profesional",
+  "pron_ok": true/false,
+  "pron_tip": "una palabra del estudiante que necesita trabajo de pronunciación, o vacío",
+  "alt_connector": "si pron_ok es false, sugiere un conector C1 alternativo más fluido con ejemplo, o vacío",
+  "coach_note": "una frase en español estilo Arquitecto de Discurso — reconoce progreso específico o señala UN punto exacto a mejorar",
+  "belt_action": "PROBANDO|APRENDIENDO|DOMINADO — nivel que corresponde a este intento"
+}
+
+Guía de puntuación: 90-100=uso excelente y natural, 70-89=buen uso con errores menores, 50-69=uso parcial o mecánico, <50=estructura no detectada o muy forzada.`;
+
+    const key=localStorage.getItem('claude_api_key');
+    const body={model:'claude-sonnet-4-6',max_tokens:600,system:sys,messages:[{role:'user',content:usr}]};
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify(body),
+      signal:AbortSignal.timeout(30000)
+    });
+    if(!r.ok){const d=await r.json();throw new Error(d.error?.message||'Claude API error '+r.status);}
+    const d=await r.json();
+    const raw=d.content&&d.content[0]&&d.content[0].text;
+    let result;
+    try{result=JSON.parse(raw.replace(/```json|```/g,'').trim());}
+    catch(e){result={score:65,used:true,quote:'',tip:'Intenta usar la estructura más claramente',pron_ok:true,pron_tip:'',alt_connector:'',coach_note:'Sigue practicando — la fluidez llega con la repetición constante.',belt_action:'PROBANDO'};}
+    c1UpdateBelt(s.id,result.belt_action||'PROBANDO');
+    c1ShowResult(result);
+  }catch(err){
+    document.getElementById('c1-cd').textContent='—';document.getElementById('c1-cd').className='c1-cd';
+    document.getElementById('c1-seval').className='c1-seval on';
+    const rb=document.getElementById('c1-rec-btn');rb.disabled=false;rb.textContent='🎙 Practicar (15s)';rb.onclick=()=>c1StartRec();
+  }
+}
+
+function c1ShowResult(result){
+  const s=c1.list[c1.idx];if(!s)return;
+  const score=Math.max(0,Math.min(100,result.score||0));
+  const xpEarned=score>=80?5:score>=60?3:score>=40?1:0;
+  c1.xp+=xpEarned;if(xpEarned>0)addXP(xpEarned);
+  document.getElementById('c1-xp-lbl').textContent='+'+c1.xp+' XP';
+  c1.results[s.id]=score;c1RenderDots();
+  let sc='sr',llbl='lr',lbl='Estructura no detectada — sigue practicando';
+  if(score>=80){sc='sg';llbl='lg';lbl='¡Excelente! Estructura perfecta';}
+  else if(score>=65){sc='sb';llbl='lb';lbl='Buen uso de la estructura C1';}
+  else if(score>=45){sc='sy';llbl='ly';lbl='Uso parcial — casi lo tienes';}
+  const scoEl=document.getElementById('c1-sco');scoEl.className='c1-sco '+sc;scoEl.textContent=score;
+  const rl=document.getElementById('c1-res-lbl');rl.className='c1-res-lbl '+llbl;rl.textContent=lbl;
+  // Belt badge in sub-label
+  const beltAction=result.belt_action||c1GetBelt()[s.id]||'';
+  const beltMeta={PROBANDO:{e:'🔰',c:'#C89800'},APRENDIENDO:{e:'📈',c:'#0092D1'},DOMINADO:{e:'🏆',c:'#46A302'}};
+  const bm=beltMeta[beltAction];
+  const beltHtml=bm?` &nbsp;<span style="font-size:.65rem;font-weight:900;color:${bm.c};background:${bm.c}1a;border-radius:10px;padding:1px 7px">${bm.e} ${beltAction}</span>`:'';
+  document.getElementById('c1-res-sub').innerHTML=(xpEarned>0?'+'+xpEarned+' XP · ':' · ')+(result.used?'✅ Estructura detectada':'❌ No se detectó la estructura')+beltHtml;
+  const qbox=document.getElementById('c1-qbox');
+  if(result.quote&&result.quote.length>3){
+    qbox.className='c1-qbox';qbox.textContent='🗣 "'+result.quote+'"';
+  }else{
+    qbox.className='c1-qbox miss';qbox.textContent='No se usó la estructura. Ejemplo: '+s.ex;
+  }
+  document.getElementById('c1-tipbox').textContent='💡 '+(result.tip||'Practica hasta que la estructura salga de forma natural');
+  // Arquitecto coach note
+  const coachbox=document.getElementById('c1-coachbox');
+  if(result.coach_note){coachbox.style.display='block';coachbox.textContent='🎯 Arquitecto: '+result.coach_note;}
+  else{coachbox.style.display='none';}
+  // Filtro de Pronunciación — alt connector
+  const altbox=document.getElementById('c1-altbox');
+  if(result.alt_connector&&result.pron_ok===false){altbox.style.display='block';altbox.textContent='🔄 Filtro de Pronunciación: '+result.alt_connector;}
+  else{altbox.style.display='none';}
+  const pronbox=document.getElementById('c1-pronbox');
+  if(result.pron_tip&&result.pron_tip.length>1){
+    const pw=result.pron_tip.trim();
+    const pd=s.pron.find(p=>p.w.toLowerCase()===pw.toLowerCase());
+    pronbox.style.display='block';
+    pronbox.innerHTML='🔊 Pronunciación: <strong>'+pw+'</strong>'+(pd?' <span style="opacity:.75">'+pd.ph+'</span>':'')+' &nbsp;<button onclick="speak(\''+pw+'\',null)" style="background:var(--b);border:none;border-radius:6px;padding:2px 9px;color:#fff;font:.7rem/1 Nunito,sans-serif;font-weight:800;cursor:pointer">🔊 Escuchar</button>';
+  }else{pronbox.style.display='none';}
+  document.getElementById('c1-cd').textContent='';document.getElementById('c1-cd').className='c1-cd';
+  document.getElementById('c1-res').className='c1-res on';
+  const rb=document.getElementById('c1-rec-btn');
+  rb.disabled=false;rb.textContent='🔄 Intentar de nuevo';
+  rb.onclick=()=>{document.getElementById('c1-res').className='c1-res';c1StartRec();};
+  document.getElementById('c1-next-btn').style.display='';
+}
+
+function c1SelfEval(ok){
+  const s=c1.list[c1.idx];if(!s)return;
+  c1.results[s.id]=ok?75:20;
+  const xpEarned=ok?3:0;
+  c1.xp+=xpEarned;if(xpEarned>0)addXP(xpEarned);
+  document.getElementById('c1-xp-lbl').textContent='+'+c1.xp+' XP';
+  c1RenderDots();
+  document.getElementById('c1-seval').className='c1-seval';
+  document.getElementById('c1-next-btn').style.display='';
+}
+
+function c1Next(){
+  c1.idx++;
+  if(c1.idx>=c1.list.length){c1ShowComplete();return;}
+  c1RenderCard();c1RenderDots();
+  document.getElementById('c1-card-wrap').style.display='block';
+  document.getElementById('c1-complete-wrap').style.display='none';
+}
+
+function c1ShowComplete(){
+  document.getElementById('c1-card-wrap').style.display='none';
+  document.getElementById('c1-next-btn').style.display='none';
+  document.getElementById('c1-complete-wrap').style.display='block';
+  const scores=Object.values(c1.results);
+  const great=scores.filter(v=>v>=70).length;
+  const total=c1.list.length;
+  document.getElementById('c1-trophy').textContent=great===total?'🏆':great>=total*0.7?'⭐':'💪';
+  document.getElementById('c1-complete-title').textContent=great===total?'¡Perfecto! Todas las estructuras dominadas':great+'/'+total+' estructuras dominadas — ¡Sigue así!';
+  document.getElementById('c1-complete-sub').textContent='+'+c1.xp+' XP ganados · '+(total-great)+' para reforzar';
+  // Cinturón de Herramientas summary
+  const belt=c1GetBelt();
+  const beltRows=C1_DATA.map(s=>{
+    const st=belt[s.id];
+    const icon={DOMINADO:'🏆',APRENDIENDO:'📈',PROBANDO:'🔰'}[st]||'⬜';
+    const color={DOMINADO:'#46A302',APRENDIENDO:'#0092D1',PROBANDO:'#C89800'}[st]||'var(--tl)';
+    return `<span style="color:${color}">${icon} ${s.pattern.replace(/\[.*?\]/g,'…').slice(0,35)}</span>`;
+  }).join('<br>');
+  document.getElementById('c1-belt-summary').innerHTML=`<div style="font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--tm);margin-bottom:6px">🎽 Mi Cinturón de Herramientas</div>${beltRows}`;
+}
+
+function c1Repeat(){
+  c1.idx=0;c1.results={};c1.xp=0;
+  document.getElementById('c1-xp-lbl').textContent='+0 XP';
+  document.getElementById('c1-complete-wrap').style.display='none';
+  document.getElementById('c1-card-wrap').style.display='block';
+  c1RenderDots();c1RenderCard();
 }
 
 // ─── WELCOME SCREEN ───
