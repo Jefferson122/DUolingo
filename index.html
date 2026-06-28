@@ -249,6 +249,32 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
 .sc-btns{display:flex;gap:8px;justify-content:center;margin-top:4px}
 
 /* ─── TEMPLATES (always visible) ─── */
+/* ─── BANCO DE ESTRUCTURAS ─── */
+.sb-panel{background:var(--w);border:2px solid var(--br);border-radius:16px;margin-top:14px;overflow:hidden;box-shadow:var(--sh0)}
+.sb-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:linear-gradient(135deg,#FFF8E0,#FFF0F5);border-bottom:1.5px solid var(--br);gap:8px;flex-wrap:wrap}
+.sb-hdr-left{display:flex;align-items:center;gap:8px;flex:1}
+.sb-title{font-size:.85rem;font-weight:900;color:var(--t)}
+.sb-count{font-size:.65rem;font-weight:900;background:var(--y);color:#5C3D00;border-radius:20px;padding:1px 8px}
+.sb-body{padding:12px 14px 14px}
+.sb-chips{display:flex;flex-wrap:wrap;gap:8px;min-height:36px;margin-bottom:10px}
+.sb-chip{display:flex;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--br);border-radius:20px;padding:5px 12px;font-size:.76rem;font-weight:700;color:var(--t);cursor:default;transition:.2s}
+.sb-chip:hover{border-color:var(--b);background:var(--bl)}
+.sb-chip .sb-chip-del{background:none;border:none;cursor:pointer;color:var(--tl);font-size:.7rem;padding:0;margin-left:2px;line-height:1}
+.sb-chip .sb-chip-del:hover{color:var(--r)}
+.sb-chip.ai-chip{border-color:var(--g);background:linear-gradient(135deg,#F0FFF4,#E8F5FF)}
+.sb-chip.ai-chip::before{content:"✨";font-size:.65rem}
+.sb-pending{background:linear-gradient(135deg,#FFFDE4,#FFF0F5);border:1.5px dashed var(--yd);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:none}
+.sb-pending-lbl{font-size:.68rem;font-weight:900;color:var(--yd);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.sb-pending-row{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.sb-pending-text{flex:1;font-size:.78rem;font-weight:700;color:var(--t);line-height:1.5}
+.sb-pending-btns{display:flex;gap:6px;flex-shrink:0}
+.sb-pending-add{background:var(--g);border:none;border-radius:10px;padding:5px 13px;color:#fff;font:.75rem/1 'Nunito',sans-serif;font-weight:900;cursor:pointer}
+.sb-pending-skip{background:var(--bg);border:1.5px solid var(--br);border-radius:10px;padding:5px 10px;color:var(--tl);font:.75rem/1 'Nunito',sans-serif;font-weight:700;cursor:pointer}
+.sb-add-row{display:flex;gap:8px;margin-top:6px}
+.sb-add-input{flex:1;border:1.5px solid var(--br);border-radius:10px;padding:7px 12px;font:.79rem/1 'Nunito',sans-serif;font-weight:700;color:var(--t);background:var(--bg);outline:none}
+.sb-add-input:focus{border-color:var(--b)}
+.sb-add-btn{background:var(--b);border:none;border-radius:10px;padding:7px 14px;color:#fff;font:.79rem/1 'Nunito',sans-serif;font-weight:900;cursor:pointer;white-space:nowrap}
+.sb-empty{font-size:.78rem;font-weight:600;color:var(--tl);font-style:italic;padding:6px 0}
 .tpl-card{background:var(--w);border:2px solid var(--br);border-radius:16px;overflow:hidden;margin-top:14px;box-shadow:var(--sh0)}
 .tpl-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:linear-gradient(135deg,#F0FFF4,#EBF8FF);border-bottom:1.5px solid var(--br)}
 .tpl-hdr h4{font-size:.88rem;font-weight:900;color:var(--t)}
@@ -717,6 +743,30 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
     <p class="kbd-hint"><kbd>Space</kbd> start · <kbd>R</kbd> reset · <kbd>N</kbd> new photo · <kbd>D</kbd> done early</p>
   </div>
 
+  <div class="sb-panel" id="sb-panel-photo">
+    <div class="sb-hdr">
+      <div class="sb-hdr-left"><span>🎽</span><span class="sb-title">Mi Banco de Estructuras</span><span class="sb-count" id="sb-count-photo">0</span></div>
+      <span style="font-size:.68rem;font-weight:700;color:var(--tl)">Foto · crece con tu práctica</span>
+    </div>
+    <div class="sb-body">
+      <div class="sb-pending" id="sb-pending-photo">
+        <div class="sb-pending-lbl">✨ IA sugiere agregar:</div>
+        <div class="sb-pending-row">
+          <div class="sb-pending-text" id="sb-pending-text-photo"></div>
+          <div class="sb-pending-btns">
+            <button class="sb-pending-add" onclick="sbAccept('photo')">+ Agregar</button>
+            <button class="sb-pending-skip" onclick="sbSkip('photo')">Ignorar</button>
+          </div>
+        </div>
+      </div>
+      <div class="sb-chips" id="sb-chips-photo"><span class="sb-empty">Practica y habla — la IA irá añadiendo estructuras aquí 💡</span></div>
+      <div class="sb-add-row">
+        <input class="sb-add-input" id="sb-input-photo" placeholder="Añade tu propia estructura o vocabulario…" onkeydown="if(event.key==='Enter')sbManualAdd('photo')">
+        <button class="sb-add-btn" onclick="sbManualAdd('photo')">+ Añadir</button>
+      </div>
+    </div>
+  </div>
+
   <div class="tpl-card">
     <div class="tpl-hdr"><h4>📋 Estructura — Foto (90 seg)</h4><button class="tpl-test-btn" onclick="toggleMemorize(this)">🧠 Memorizar</button></div>
     <div class="tpl-body">
@@ -795,6 +845,30 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
       <button class="btn btn-ghost btn-sm" onclick="resetRead()">↺ Reset</button>
     </div>
     <p class="kbd-hint"><kbd>Space</kbd> start · <kbd>R</kbd> reset · <kbd>N</kbd> new question · <kbd>D</kbd> done early</p>
+  </div>
+
+  <div class="sb-panel" id="sb-panel-read">
+    <div class="sb-hdr">
+      <div class="sb-hdr-left"><span>🎽</span><span class="sb-title">Mi Banco de Estructuras</span><span class="sb-count" id="sb-count-read">0</span></div>
+      <span style="font-size:.68rem;font-weight:700;color:var(--tl)">Leer y Hablar · crece con tu práctica</span>
+    </div>
+    <div class="sb-body">
+      <div class="sb-pending" id="sb-pending-read">
+        <div class="sb-pending-lbl">✨ IA sugiere agregar:</div>
+        <div class="sb-pending-row">
+          <div class="sb-pending-text" id="sb-pending-text-read"></div>
+          <div class="sb-pending-btns">
+            <button class="sb-pending-add" onclick="sbAccept('read')">+ Agregar</button>
+            <button class="sb-pending-skip" onclick="sbSkip('read')">Ignorar</button>
+          </div>
+        </div>
+      </div>
+      <div class="sb-chips" id="sb-chips-read"><span class="sb-empty">Practica y habla — la IA irá añadiendo estructuras aquí 💡</span></div>
+      <div class="sb-add-row">
+        <input class="sb-add-input" id="sb-input-read" placeholder="Añade tu propia estructura o vocabulario…" onkeydown="if(event.key==='Enter')sbManualAdd('read')">
+        <button class="sb-add-btn" onclick="sbManualAdd('read')">+ Añadir</button>
+      </div>
+    </div>
   </div>
 
   <div class="tpl-card">
@@ -883,6 +957,30 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
     <p class="kbd-hint"><kbd>Space</kbd> start · <kbd>R</kbd> reset · <kbd>D</kbd> done early</p>
   </div>
 
+  <div class="sb-panel" id="sb-panel-sample">
+    <div class="sb-hdr">
+      <div class="sb-hdr-left"><span>🎽</span><span class="sb-title">Mi Banco de Estructuras</span><span class="sb-count" id="sb-count-sample">0</span></div>
+      <span style="font-size:.68rem;font-weight:700;color:var(--tl)">Speaking Sample · crece con tu práctica</span>
+    </div>
+    <div class="sb-body">
+      <div class="sb-pending" id="sb-pending-sample">
+        <div class="sb-pending-lbl">✨ IA sugiere agregar:</div>
+        <div class="sb-pending-row">
+          <div class="sb-pending-text" id="sb-pending-text-sample"></div>
+          <div class="sb-pending-btns">
+            <button class="sb-pending-add" onclick="sbAccept('sample')">+ Agregar</button>
+            <button class="sb-pending-skip" onclick="sbSkip('sample')">Ignorar</button>
+          </div>
+        </div>
+      </div>
+      <div class="sb-chips" id="sb-chips-sample"><span class="sb-empty">Practica y habla — la IA irá añadiendo estructuras aquí 💡</span></div>
+      <div class="sb-add-row">
+        <input class="sb-add-input" id="sb-input-sample" placeholder="Añade tu propia estructura o vocabulario…" onkeydown="if(event.key==='Enter')sbManualAdd('sample')">
+        <button class="sb-add-btn" onclick="sbManualAdd('sample')">+ Añadir</button>
+      </div>
+    </div>
+  </div>
+
   <div class="tpl-card">
     <div class="tpl-hdr"><h4>📋 Marco I-LAST — Speaking Sample (1–3 min)</h4><button class="tpl-test-btn" onclick="toggleMemorize(this)">🧠 Memorizar</button></div>
     <div class="tpl-body">
@@ -966,6 +1064,30 @@ kbd{background:var(--bg);border:1.5px solid var(--brs);border-radius:4px;padding
       <button class="btn btn-b" id="is-next" onclick="nextISQ()" style="display:none">Next Question →</button>
     </div>
     <p class="kbd-hint">Set: <strong id="is-set-label">—</strong> · <kbd>Space</kbd> answer · <kbd>D</kbd> done early</p>
+  </div>
+
+  <div class="sb-panel" id="sb-panel-interactive">
+    <div class="sb-hdr">
+      <div class="sb-hdr-left"><span>🎽</span><span class="sb-title">Mi Banco de Estructuras</span><span class="sb-count" id="sb-count-interactive">0</span></div>
+      <span style="font-size:.68rem;font-weight:700;color:var(--tl)">Interactive · crece con tu práctica</span>
+    </div>
+    <div class="sb-body">
+      <div class="sb-pending" id="sb-pending-interactive">
+        <div class="sb-pending-lbl">✨ IA sugiere agregar:</div>
+        <div class="sb-pending-row">
+          <div class="sb-pending-text" id="sb-pending-text-interactive"></div>
+          <div class="sb-pending-btns">
+            <button class="sb-pending-add" onclick="sbAccept('interactive')">+ Agregar</button>
+            <button class="sb-pending-skip" onclick="sbSkip('interactive')">Ignorar</button>
+          </div>
+        </div>
+      </div>
+      <div class="sb-chips" id="sb-chips-interactive"><span class="sb-empty">Practica y habla — la IA irá añadiendo estructuras aquí 💡</span></div>
+      <div class="sb-add-row">
+        <input class="sb-add-input" id="sb-input-interactive" placeholder="Añade tu propia estructura o vocabulario…" onkeydown="if(event.key==='Enter')sbManualAdd('interactive')">
+        <button class="sb-add-btn" onclick="sbManualAdd('interactive')">+ Añadir</button>
+      </div>
+    </div>
   </div>
 
   <div class="tpl-card">
@@ -2615,6 +2737,8 @@ Rules you MUST follow:
     btn.textContent='✅ Mejorado';btn.style.background='var(--g)';btn.style.boxShadow='0 4px 0 var(--gd)';
     const sm=document.getElementById('score-modal');
     if(sm)setTimeout(()=>sm.scrollTo({top:sm.scrollHeight,behavior:'smooth'}),150);
+    // Disparar sugerencia para el banco de estructuras (no bloquea UI)
+    sbSuggestFromTranscript(cleanTxt,lastQType);
   }catch(e){
     loading.style.display='none';
     errEl.textContent='❌ '+e.message;errEl.style.display='block';
@@ -3745,6 +3869,118 @@ function c1Repeat(){
   c1RenderDots();c1RenderCard();
 }
 
+// ════════════ BANCO DE ESTRUCTURAS ════════════
+const SB_SECTION_MAP={
+  'Speak About the Photo':'photo',
+  'Read Then Speak':'read',
+  'Speaking Sample':'sample',
+  'Interactive Speaking':'interactive'
+};
+
+function sbGetBank(){
+  try{return JSON.parse(localStorage.getItem('structure_bank')||'{"photo":[],"read":[],"sample":[],"interactive":[]}');}
+  catch(e){return {photo:[],read:[],sample:[],interactive:[]};}
+}
+function sbSaveBank(bank){
+  localStorage.setItem('structure_bank',JSON.stringify(bank));
+}
+
+function sbRender(sec){
+  const bank=sbGetBank();
+  const items=bank[sec]||[];
+  const chipsEl=document.getElementById('sb-chips-'+sec);
+  const countEl=document.getElementById('sb-count-'+sec);
+  if(!chipsEl)return;
+  countEl.textContent=items.length;
+  if(items.length===0){
+    chipsEl.innerHTML='<span class="sb-empty">Practica y habla — la IA irá añadiendo estructuras aquí 💡</span>';
+    return;
+  }
+  chipsEl.innerHTML=items.map((item,i)=>`
+    <span class="sb-chip${item.ai?' ai-chip':''}" title="${(item.example||'').replace(/"/g,"'")}" >
+      ${item.text}
+      <button class="sb-chip-del" onclick="sbDelete('${sec}',${i})" title="Eliminar">×</button>
+    </span>`).join('');
+}
+
+function sbDelete(sec,idx){
+  const bank=sbGetBank();
+  if(!bank[sec])return;
+  bank[sec].splice(idx,1);
+  sbSaveBank(bank);
+  sbRender(sec);
+}
+
+function sbManualAdd(sec){
+  const input=document.getElementById('sb-input-'+sec);
+  const text=(input.value||'').trim();
+  if(!text)return;
+  const bank=sbGetBank();
+  if(!bank[sec])bank[sec]=[];
+  bank[sec].unshift({text,ai:false,addedAt:Date.now()});
+  sbSaveBank(bank);
+  sbRender(sec);
+  input.value='';
+}
+
+// Pending suggestion state
+const _sbPending={};
+
+function sbShowSuggestion(sec,text){
+  if(!text)return;
+  _sbPending[sec]=text;
+  const pendingEl=document.getElementById('sb-pending-'+sec);
+  const textEl=document.getElementById('sb-pending-text-'+sec);
+  if(!pendingEl||!textEl)return;
+  textEl.textContent=text;
+  pendingEl.style.display='block';
+}
+
+function sbAccept(sec){
+  const text=_sbPending[sec];
+  if(!text)return;
+  const bank=sbGetBank();
+  if(!bank[sec])bank[sec]=[];
+  if(!bank[sec].find(i=>i.text===text)){
+    bank[sec].unshift({text,ai:true,addedAt:Date.now()});
+    sbSaveBank(bank);
+    sbRender(sec);
+  }
+  sbSkip(sec);
+}
+
+function sbSkip(sec){
+  delete _sbPending[sec];
+  const pendingEl=document.getElementById('sb-pending-'+sec);
+  if(pendingEl)pendingEl.style.display='none';
+}
+
+async function sbSuggestFromTranscript(transcript,qType){
+  const sec=SB_SECTION_MAP[qType];
+  if(!sec||!transcript||transcript.length<15)return;
+  const key=localStorage.getItem('claude_api_key');
+  if(!key||key.length<20)return;
+  try{
+    const sys=`Eres un coach de inglés DET. Basándote en lo que dijo el estudiante, sugiere UNA sola estructura, conector o expresión de vocabulario C1 que le ayudaría a mejorar su respuesta. Responde SOLO en este formato exacto: "estructura" — ejemplo breve en inglés. Nada más. Máximo 20 palabras total.`;
+    const usr=`El estudiante dijo (tarea: ${qType}):\n"${transcript.slice(0,400)}"\n\nSugiere UNA estructura o vocabulario clave que le faltó o que podría mejorar. Formato: "estructura" — ejemplo breve.`;
+    const body={model:'claude-haiku-4-5-20251001',max_tokens:80,system:sys,messages:[{role:'user',content:usr}]};
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify(body),signal:AbortSignal.timeout(15000)
+    });
+    if(!r.ok)return;
+    const d=await r.json();
+    const suggestion=(d.content&&d.content[0]&&d.content[0].text||'').trim();
+    if(suggestion&&suggestion.length>4)sbShowSuggestion(sec,suggestion);
+  }catch(e){}
+}
+
+// Init all banks on load
+function sbInitAll(){
+  ['photo','read','sample','interactive'].forEach(sec=>sbRender(sec));
+}
+
 // ─── WELCOME SCREEN ───
 function enterApp(){
   const key=document.getElementById('wc-key-input').value.trim();
@@ -3766,6 +4002,7 @@ window.addEventListener('load',()=>{
   }
   updateXPUI();
   updateHomeStats();
+  sbInitAll();
   pingLMSStatus();
   // try silent mic request
   navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
